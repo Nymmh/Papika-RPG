@@ -1,0 +1,25 @@
+{
+  "name": "papika-rpg-api",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nymmh/Papika-RPG.git"
+  },
+  "author": "Nymh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nymmh/Papika-RPG/issues"
+  },
+  "homepage": "https://github.com/Nymmh/Papika-RPG#readme",
+  "dependencies": {
+    "apollo-server-express": "^2.22.1",
+    "express": "^4.17.1",
+    "graphql": "^15.5.0",
+    "mongoose": "^5.12.2"
+  }
+}
