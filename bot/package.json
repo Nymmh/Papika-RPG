@@ -1,0 +1,25 @@
+{
+  "name": "papika-rpg-bot",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "dev": "nodemon rpgbot.js",
+    "run": "node rpgbot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nymmh/Papika-RPG.git"
+  },
+  "author": "Nymh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nymmh/Papika-RPG/issues"
+  },
+  "homepage": "https://github.com/Nymmh/Papika-RPG#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "eris": "^0.14.0",
+    "eris-additions": "^1.4.1",
+    "require-reload": "^0.2.2"
+  }
+}
