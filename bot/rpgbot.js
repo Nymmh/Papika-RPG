@@ -5,6 +5,7 @@ let reload = require('require-reload')(require);
 
 let fs = require('fs'),
     Eris = require('eris-additions')(require('eris')),
+    axios = require('axios'),
     validateConfig = reload('./util/validateConfig.js'),
     CommandManager = reload('./util/commandManager.js'),
     util = reload('./util/utils.js'),
@@ -86,7 +87,6 @@ function LoadEvent() {
         });
     });
 }
-
 function initEvent(name) {
     if (name === 'messageCreate') {
         Ai.on('messageCreate', msg => {
@@ -94,7 +94,11 @@ function initEvent(name) {
                 reloadModule(msg);
             else events.messageCreate.handler(Ai, msg, CommandManagers, config, settingsManager);
         });
-    } else if (name === 'Ready') {
+    }else if(name === 'guildMemberAdd'){
+        Ai.on('guildMemberAdd', (member,guild) =>{
+            events.guildMemberAdd(Ai,guild,member);
+        });
+    }else if (name === 'Ready') {
         Ai.on('Ready', () => {
             events.ready(Ai, config, games, util);
         });
@@ -126,6 +130,35 @@ function miscEvents() {
     });
 }
 
+// function reloadCooldowns(){
+//     return new Promise(resolve => {
+//         axios({
+//             url: config.APIurl,
+//             method: 'post',
+//             data:{
+//                 query:`
+//                 query{
+//                     cooldowns{
+//                       name
+//                       cooldown
+//                     }
+//                   }
+//                 `,
+//             },
+//             headers:{
+//                 'Content-Type':'application/json'
+//             }
+//         }).then(result=>{
+//             let cooldowns = result.data.data.cooldowns,
+//                 cdFile = require('./json/cooldowns.json');
+//             for(let cd in cooldowns){
+//                 console.log(cdFile[cooldowns[cd].name])
+//                 //fs.writeFile('./json/cooldowns.json')
+//             }
+//         })
+//     });
+// }
+
 function login() {
     logger.logBold(`Logging in...`, 'green');
     Ai.connect().catch(error => {
@@ -137,6 +170,7 @@ readyCommands()
     .then(intreadyCommands)
     .then(LoadEvent)
     .then(miscEvents)
+    //.then(reloadCooldowns)
     .then(login)
     .catch(error => {
         logger.error(error, 'Error in ready')

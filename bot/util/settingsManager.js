@@ -192,13 +192,6 @@ function addIgnoreForUserOrChannel(guildId, type, id, command){
             commandSettings[guildId][type] = {};
         if(!commandSettings[guildId][type].hasOwnProperty(id))
             commandSettings[guildId][type][id] = [];
-        if(command === 'cleverbot'){
-            if(!commandSettings[guildId][type][id].includes('all')&& !commandSettings[guildId][type][id].includes('cleverbot')){
-                commandSettings[guildId][type][id].push('cleverbot');
-                updateCommand = true;
-                return resolve(true);
-            }return resolve(false);
-        }
         let prefix = Object.keys(commandList).find(p=>command.startsWith(p));
         command = command.replace(prefix, '');
         if(command === 'all'){
@@ -241,28 +234,6 @@ function removeIgnoreForUserOrChannel(guildId, type, id, command){
             return reject('Invalid arg');
         if(!commandSettingsExistFor(guildId, type) || !commandSettings[guildId][type].hasOwnProperty(id))
             return resolve(false);
-        if(command === 'cleverbot'){
-            if(commandSettings[guildId][type][id].includes('cleverbot')){
-                commandSettings[guildId][type][id].splice(commandSettings[guildId][type][id].indexOf('cleverbot'),1);
-                if(commandSettings[guildId][type][id].length === 0){
-                    delete commandSettings[guildId][type][id];
-                    removeIfEmpty(commandSettings[guildId],type);
-                    removeIfEmpty(commandSettings, guildId);
-                }
-                updateCommand = true;
-                return resolve(true);
-            }
-            if(commandSettings[guildId][type][id].includes('all')){
-                commandSettings[guildId][type][id] = [];
-                for(let p in commandList){
-                    if(commandList.hasOwnProperty(p))
-                    commandSettings[guildId][type][id].push(p + 'all');
-                }
-                updateCommand = true;
-                return resolve(true);
-            }
-            return resolve(false);
-        }
         let prefix = Object.keys(commandList).find(p => command.startsWith(p));
         command = command.replace(prefix, '');
         if(command === 'all'){

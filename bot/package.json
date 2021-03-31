@@ -17,9 +17,11 @@
   },
   "homepage": "https://github.com/Nymmh/Papika-RPG#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "eris": "^0.14.0",
     "eris-additions": "^1.4.1",
+    "moment": "^2.29.1",
     "require-reload": "^0.2.2"
   }
 }
