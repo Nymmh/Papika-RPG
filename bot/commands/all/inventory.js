@@ -50,6 +50,6 @@ module.exports = {
             if(result.data.data.users[0].inventory[iv].groceries)invmsgTemp += `Groceries >> ${result.data.data.users[0].inventory[iv].groceries}\n`;
         }
         return msg.author.getDMChannel().then(dmch=>{dmch.createMessage("Inventory\n"+invmsgst+invmsgTemp+invmsgPerm+invmsged).catch(err => {handleError(Ai, __filename, msg.channel, err)});}).catch(err => {handleError(Ai, __filename, msg.channel, err)});
-    })
+    });
     }
 }

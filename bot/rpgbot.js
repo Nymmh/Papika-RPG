@@ -126,6 +126,11 @@ function miscEvents() {
                 logger.logBold(`Shard ${id} resumed`, 'green');
             });
         }
+        if(Ai.listeners('guildCreate').length === 0){
+            Ai.on('guildCreate', guild =>{
+                logger.debug(guild.name, 'Guild Create');
+            });
+        }
         return resolve();
     });
 }
