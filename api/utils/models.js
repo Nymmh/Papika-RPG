@@ -65,3 +65,11 @@ module.exports.ItemValues = mongoose.model("itemvalues",{
     cooldown:Number,
     badsleepmax:Number
 });
+module.exports.Environments = mongoose.model("environments",{
+    type:String,
+    weatherType:String,
+    cloudType:String,
+    temperature:String,
+    humidity:String,
+    wind:String
+});

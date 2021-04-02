@@ -3,7 +3,8 @@ const express = require('express'),
       {ApolloServer} = require('apollo-server-express'),
       resolvers = require('./resolver'),
       {typeDefs} = require('./typeDef'),
-      config = require('./json/config.json');
+      config = require('./json/config.json'),
+      {generateWeather} = require('./utils/weather');
     
 const server = async()=>{
     const app = express();
@@ -15,7 +16,10 @@ const server = async()=>{
     server.applyMiddleware({app});
     const port = process.env.PORT || 5000;
     app.listen({port:port},()=>{
-        console.log(`Server started on port ${port}`)
+        console.log(`Server started on port ${port}`);
+        setInterval(()=>{
+            generateWeather();
+        },21600000)
     });
 }
 server();

@@ -1,4 +1,4 @@
-const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories} = require('./utils/models');
+const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments} = require('./utils/models');
 const {createUser} = require('./utils/createUser'),
       {modifyUser} = require('./utils/modifyUser'),
       {userWork} = require('./utils/userwork'),
@@ -33,6 +33,12 @@ module.exports = {
                 else if(args.group) return Jobs.find({group:args.group});
                 else if(args.rank) return Jobs.find({rank:args.rank});
                 else return Jobs.find();
+            }
+        },
+        environments(parent, args, context, info){
+            if(args){
+                if(args.type)return Environments.find({type:args.type});
+                else return Environments.find();
             }
         }
     },

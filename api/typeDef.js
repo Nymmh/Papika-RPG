@@ -6,6 +6,7 @@ module.exports.typeDefs = gql`
         cooldowns(name:String):[Cooldowns!]
         items(name:String,group:ItemGroup):[Items!]
         jobs(name:String,group:JobGroup,rank:Int):[Jobs!]
+        environments(type:EnvironmentType):[Environment!]
     }
     type Mutation {
         createUser(auth:String,discordId:String,name:String,avatar:String):[Profile]
@@ -79,6 +80,14 @@ module.exports.typeDefs = gql`
         firedchance:String!,
         requiredSchool:String,
     }
+    type Environment{
+        type:EnvironmentType!,
+        weatherType:String,
+        cloudType:String,
+        temperature:String,
+        humidity:String,
+        wind:String
+    }
 
     enum ItemGroup{
         Food
@@ -89,5 +98,8 @@ module.exports.typeDefs = gql`
     }
     enum JobGroup{
         Japari_Park
+    }
+    enum EnvironmentType{
+        Weather
     }
 `;
