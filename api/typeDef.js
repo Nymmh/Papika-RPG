@@ -13,6 +13,7 @@ module.exports.typeDefs = gql`
         UserWork(auth:String,discordId:String,money:Int,happiness:Int,hunger:Int,sleep:Int,jobexp:Int,nextbill:Int,lastwork:String):[Profile]
         UserSleep(auth:String,discordId:String,sleep:Int,happiness:Int,hunger:Int,reason:String):[Profile]
         UserBuy(auth:String,discordId:String,money:Int,happiness:Int,item:String,amount:Int):[Profile]
+        UserEat(auth:String,discordId:String,hunger:Int,happiness:Int,sleep:Int,item:String,itemsleft:Int):[Profile]
     }
     type Profile{
         discordId:String!,

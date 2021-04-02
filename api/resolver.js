@@ -3,7 +3,8 @@ const {createUser} = require('./utils/createUser'),
       {modifyUser} = require('./utils/modifyUser'),
       {userWork} = require('./utils/userwork'),
       {userSleep} = require('./utils/userSleep'),
-      {userBuy} = require('./utils/userBuy');
+      {userBuy} = require('./utils/userBuy'),
+      {userEat} = require('./utils/userEat');
 
 module.exports = {
     Query:{
@@ -40,7 +41,8 @@ module.exports = {
         modifyUser: async(_,{auth,discordId,reason,value})=>{modifyUser(auth,discordId,reason,value)},
         UserWork: async(_,{auth,discordId,money,happiness,sleep,hunger,jobexp,nextbill,lastwork})=>{userWork(auth,discordId,money,happiness,sleep,hunger,jobexp,nextbill,lastwork)},
         UserSleep: async(_,{auth,discordId,sleep,happiness,hunger,reason})=>{userSleep(auth,discordId,sleep,happiness,hunger,reason)},
-        UserBuy: async(_,{auth,discordId,money,happiness,item,amount})=>{userBuy(auth,discordId,money,happiness,item,amount)}
+        UserBuy: async(_,{auth,discordId,money,happiness,item,amount})=>{userBuy(auth,discordId,money,happiness,item,amount)},
+        UserEat: async(_,{auth,discordId,hunger,happiness,sleep,item,itemsleft})=>{userEat(auth,discordId,hunger,happiness,sleep,item,itemsleft)}
     },
     Items:{
         async values(parent,args, context, info){
