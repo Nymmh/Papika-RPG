@@ -28,18 +28,6 @@ module.exports = {
     cooldown: 2,
     guildOnly: false,
     task(Ai, msg) {
-      /**
-       * perm checks
-       * @param {boolean} sendMessages
-       * @param {boolean} embedLinks
-       */
-      const sendMessages = msg.channel.permissionsOf(Ai.user.id).has('sendMessages');
-      const embedLinks = msg.channel.permissionsOf(Ai.user.id).has('embedLinks');
-      if (sendMessages === false) return;
-      if (embedLinks === false) return msg.channel.createMessage(`\\❌ I'm missing the \`embedLinks\` permission, which is required for this command to work.`)
-        .catch(err => {
-          handleError(Ai, __filename, msg.channel, err);
-        });
       let choice = ~~(Math.random() * RESPONSES.length);
       Ai.createMessage(msg.channel.id, {
         content: ``,

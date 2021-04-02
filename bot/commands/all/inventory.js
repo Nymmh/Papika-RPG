@@ -5,15 +5,8 @@ module.exports = {
     desc: "Look at your inventory",
     aliases: ['iv', 'inv'],
     cooldown: 10,
-    guildOnly: true,
+    guildOnly: false,
     task(Ai, msg){
-    /**
-     * perm checks
-     * @param {boolean} sendMessages
-     * @param {boolean} embedLinks
-     */
-    const sendMessages = msg.channel.permissionsOf(Ai.user.id).has('sendMessages');
-    if (sendMessages === false) return;
     axios({
         url:config.APIurl,
         method:'post',

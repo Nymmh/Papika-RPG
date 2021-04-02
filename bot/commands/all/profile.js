@@ -4,23 +4,9 @@ const handleError = require('../../util/utils.js').handleError,
 module.exports = {
     desc: "A players profile",
     aliases: ['pro', 'pf','stats'],
-    usage: "[@user]",
     cooldown: 10,
-    guildOnly: true,
-    task(Ai, msg, suffix){
-    /**
-     * perm checks
-     * @param {boolean} sendMessages
-     * @param {boolean} embedLinks
-     */
-    const sendMessages = msg.channel.permissionsOf(Ai.user.id).has('sendMessages');
-    const embedLinks = msg.channel.permissionsOf(Ai.user.id).has('embedLinks');
-    if (sendMessages === false) return;
-    if (embedLinks === false) return msg.channel.createMessage(`\\❌ I'm missing the \`embedLinks\` permission, which is required for this command to work.`)
-      .catch(err => {
-        handleError(Ai, __filename, msg.channel, err);
-      });
-      if(!suffix){
+    guildOnly: false,
+    task(Ai, msg){
         axios({
             url:config.APIurl,
             method:'post',
@@ -95,6 +81,5 @@ module.exports = {
                   }
             });
         });
-      }
     }
 }
