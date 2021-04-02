@@ -12,6 +12,7 @@ module.exports.typeDefs = gql`
         modifyUser(auth:String,discordId:String,reason:String,value:String):[Profile]
         UserWork(auth:String,discordId:String,money:Int,happiness:Int,hunger:Int,sleep:Int,jobexp:Int,nextbill:Int,lastwork:String):[Profile]
         UserSleep(auth:String,discordId:String,sleep:Int,happiness:Int,hunger:Int,reason:String):[Profile]
+        UserBuy(auth:String,discordId:String,money:Int,happiness:Int,item:String,amount:Int):[Profile]
     }
     type Profile{
         discordId:String!,
@@ -36,13 +37,15 @@ module.exports.typeDefs = gql`
     }
     type Inventory{
         discordId:String,
-        bed:[ItemValues]
+        bed:[ItemValues],
+        groceries:Int,
     }
     type Cooldowns{
         name:String!,
         cooldown:Int!
     }
     type Items{
+        _id:String!,
         name:String!,
         price:Int!,
         group:ItemGroup!

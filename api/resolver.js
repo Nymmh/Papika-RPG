@@ -2,7 +2,8 @@ const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories} = require('./utils
 const {createUser} = require('./utils/createUser'),
       {modifyUser} = require('./utils/modifyUser'),
       {userWork} = require('./utils/userwork'),
-      {userSleep} = require('./utils/userSleep');
+      {userSleep} = require('./utils/userSleep'),
+      {userBuy} = require('./utils/userBuy');
 
 module.exports = {
     Query:{
@@ -38,7 +39,8 @@ module.exports = {
         createUser: async(_,{auth,discordId,name,avatar})=>{createUser(auth,discordId,name,avatar)},
         modifyUser: async(_,{auth,discordId,reason,value})=>{modifyUser(auth,discordId,reason,value)},
         UserWork: async(_,{auth,discordId,money,happiness,sleep,hunger,jobexp,nextbill,lastwork})=>{userWork(auth,discordId,money,happiness,sleep,hunger,jobexp,nextbill,lastwork)},
-        UserSleep: async(_,{auth,discordId,sleep,happiness,hunger,reason})=>{userSleep(auth,discordId,sleep,happiness,hunger,reason)}
+        UserSleep: async(_,{auth,discordId,sleep,happiness,hunger,reason})=>{userSleep(auth,discordId,sleep,happiness,hunger,reason)},
+        UserBuy: async(_,{auth,discordId,money,happiness,item,amount})=>{userBuy(auth,discordId,money,happiness,item,amount)}
     },
     Items:{
         async values(parent,args, context, info){

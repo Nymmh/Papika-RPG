@@ -23,6 +23,7 @@ module.exports.Users = mongoose.model("users",{
 module.exports.UserInventories = mongoose.model('userinventories',{
     discordId:String,
     bed:String,
+    groceries:Number,
 });
 module.exports.Cooldowns = mongoose.model("cooldowns",{
     name:String,

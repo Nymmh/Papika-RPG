@@ -4,7 +4,7 @@ const handleError = require('../../util/utils.js').handleError,
 module.exports = {
     desc: "A players profile",
     aliases: ['pro', 'pf','stats'],
-    usage: "profile [@user]",
+    usage: "[@user]",
     cooldown: 10,
     guildOnly: true,
     task(Ai, msg, suffix){
@@ -56,7 +56,7 @@ module.exports = {
         }).then(result=>{
             let users = result.data.data.users;
             let jobinfo = "Unemployed"
-            if(users[0].jobinfo)jobinfo = users[0].jobinfo[0].name;
+            if(users[0].job != "" ||users[0].job != null)jobinfo = users[0].jobinfo[0].name;
             Ai.createMessage(msg.channel.id,{
                 content: ``,
                 embed: {
