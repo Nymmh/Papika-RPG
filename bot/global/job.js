@@ -96,7 +96,7 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
         if(reason == "jobquit"){
             if(!result.data.data.users[0].job || result.data.data.users[0].job == ''){
                 sndmsg = `<@${msg.author.id}>, you don't have a job.`;
-                Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                return Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             }else{
                 jobChange(Ai, msg, value, sndmsg);
             }
@@ -151,6 +151,7 @@ function jobChange(Ai, msg, value, sndmsg){
 }
 
 function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork){
+    let {handleBills} = require('./utils/handleBills');
     if((moment().unix() - Number(lastwork)) < cooldowns.work) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't work work for another ${Math.abs(((moment().unix() - Number(lastwork))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     let newmoney = (Number(money)+Number(income));
     let randomsleep = utils.getRandomInt(1,20),
@@ -176,10 +177,6 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
     if(newSleep <= 25 && newSleep>10){
         //falling alsleep
         Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are getting tired.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
-    }
-    if(newnextbill == 0){
-        newnextbill = 30;
-        //send bill
     }
     console.log(firedRate)
     console.log(firedchance)
@@ -216,6 +213,7 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
     }).then(()=>{
         logger.green(`User Change for ${msg.author.id} >> ${msg.author.username}`);
         workmsg = `you worked at you job and gained ${income}${config.moneyname}'s`;
+        if(newnextbill == 0)handleBills(Ai,msg,newmoney)
         if(fired){
             workmsg = `you worked you last shift and gained ${income}${config.moneyname}'s`;
             sndmsg = "dontsend";
