@@ -33,6 +33,7 @@ module.exports = {
                       happiness
                       sleep
                       hunger
+                      job
                       jobinfo{
                         name
                         income
@@ -56,8 +57,8 @@ module.exports = {
         }).then(result=>{
             let users = result.data.data.users;
             let jobinfo = "Unemployed"
-            if(users[0].job != "" ||users[0].job != null)jobinfo = users[0].jobinfo[0].name;
-            Ai.createMessage(msg.channel.id,{
+            if(users[0].job != "" && users[0].job != null && users[0].job != undefined)jobinfo = users[0].jobinfo[0].name;
+            return Ai.createMessage(msg.channel.id,{
                 content: ``,
                 embed: {
                     color: Number(config.embedColor),

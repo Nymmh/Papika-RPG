@@ -105,6 +105,7 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
             sndmsg = `<@${msg.author.id}>, you are now a ${jobname}`;
             jobChange(Ai, msg, value, sndmsg);
         }else if(reason == "work"){
+            if(result.data.data.users[0].job == "" || result.data.data.users[0].job == null || result.data.data.users[0].job == undefined)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you don't have a job.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             let happiness = result.data.data.users[0].happiness,
                 money = result.data.data.users[0].money,
                 sleep = result.data.data.users[0].sleep,
@@ -145,7 +146,7 @@ function jobChange(Ai, msg, value, sndmsg){
          }
      }).then(result=>{
          logger.green(`User Change for ${msg.author.id} >> ${msg.author.username}`);
-         Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+         if(sndmsg != "dontsend")return Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
      });
 }
 
@@ -160,14 +161,17 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
         newHunger = (hunger - randomHunger),
         randomEXP = utils.getRandomInt(minexp,maxexp),
         newexp = (jobexp + randomEXP),
-        newnextbill = (nextbill - 1);
-    if(newSleep<0)newSleep=0;
-    if(newSleep == 0){
+        newnextbill = (nextbill - 1),
+        firedRate = (Math.random() * (100 - 0 + 1) + 0).toFixed(3),
+        fired = false;
+    if(newSleep <= 0){
         //fell asleep at work
-       // Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+        firedchance = Math.abs((Number(firedchance)+newSleep));
+        Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you fell asleep at work!`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     }else if(newSleep <= 10 && newSleep>0){
         //falling alsleep
-        //Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+        firedchance = (Number(firedchance)+10);
+        Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are starting to fall asleep at work.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     }
     if(newSleep <= 25 && newSleep>10){
         //falling alsleep
@@ -176,6 +180,13 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
     if(newnextbill == 0){
         newnextbill = 30;
         //send bill
+    }
+    console.log(firedRate)
+    console.log(firedchance)
+    if(Number(firedRate)<firedchance){
+        fired = true;
+        newHappiness = (newHappiness-10);
+        Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you have been fired from your job!`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     }
     axios({
         url:config.APIurl,
@@ -202,8 +213,15 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
                 'Content-Type':'application/json'
             },
         }
-    }).then(result=>{
+    }).then(()=>{
         logger.green(`User Change for ${msg.author.id} >> ${msg.author.username}`);
-        Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you worked at you job and gained ${income}${config.moneyname}'s`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+        workmsg = `you worked at you job and gained ${income}${config.moneyname}'s`;
+        if(fired){
+            workmsg = `you worked you last shift and gained ${income}${config.moneyname}'s`;
+            sndmsg = "dontsend";
+            value = "";
+            jobChange(Ai, msg, value, sndmsg)
+        }
+        return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, ${workmsg}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     });
 }
