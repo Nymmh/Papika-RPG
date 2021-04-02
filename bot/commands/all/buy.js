@@ -112,6 +112,7 @@ module.exports = {
                                         name
                                     }
                                     groceries
+                                    fastfood
                                   }
                                 }
                               }
@@ -129,11 +130,14 @@ module.exports = {
                         if(users.money>=(price*amount)){
                             let newmoney = users.money-(price*amount),
                                 newhappiness = users.happiness,
-                                groceries = users.inventory[0].groceries;
+                                groceries = users.inventory[0].groceries,
+                                fastfood = users.inventory[0].fastfood;
                             if(!groceries) groceries = 0;
+                            if(!fastfood) fastfood = 0;
                             if(happinessonbuy)newhappiness+happinessonbuy;
                             if(users.inventory[0].bed[0].name == optionFix)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy a bed you already own.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
-                            if(optionFix == "Groceries")amount = groceries+amount;
+                            if(optionFix == "Groceries")amountup = groceries+amount;
+                            else if (optionFix == "Fast_Food")amountup = fastfood+amount;
                             axios({
                                 url:config.APIurl,
                                 method:'post',
@@ -151,7 +155,7 @@ module.exports = {
                                         money:newmoney,
                                         happiness:newhappiness,
                                         item:optionFix,
-                                        amount:amount
+                                        amount:amountup
                                     },
                                     headers:{
                                         'Content-Type':'application/json'

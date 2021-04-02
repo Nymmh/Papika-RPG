@@ -26,6 +26,7 @@ module.exports = {
                             name
                         }
                         groceries
+                        fastfood
                     }
                 }
               }
@@ -48,6 +49,7 @@ module.exports = {
                 if(keys[ky] == "bed")invmsgPerm += result.data.data.users[0].inventory[iv].bed[0].name;
             }
             if(result.data.data.users[0].inventory[iv].groceries)invmsgTemp += `Groceries >> ${result.data.data.users[0].inventory[iv].groceries}\n`;
+            if(result.data.data.users[0].inventory[iv].fastfood)invmsgTemp += `Fast Food >> ${result.data.data.users[0].inventory[iv].fastfood}\n`;
         }
         return msg.author.getDMChannel().then(dmch=>{dmch.createMessage("Inventory\n"+invmsgst+invmsgTemp+invmsgPerm+invmsged).catch(err => {handleError(Ai, __filename, msg.channel, err)});}).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     });

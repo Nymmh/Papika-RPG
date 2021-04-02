@@ -26,6 +26,7 @@ module.exports = {
         }else if(options[1].toLowerCase() == "full")full = true;
     }
     let item = food.replace(/(_)/g,' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g,lt=>lt.toUpperCase()).replace(/( )/g,'_');
+    if(item == "Fastfood")item = "Fast_Food";
     console.log(item)
     console.log(full)
     axios({
@@ -43,6 +44,7 @@ module.exports = {
                       name
                     }
                     groceries
+                    fastfood
                   }
                 }
               }
@@ -57,6 +59,7 @@ module.exports = {
     }).then(result=>{
         let users = result.data.data.users[0],
         groceries = result.data.data.users[0].inventory[0].groceries,
+        fastfood = result.data.data.users[0].inventory[0].fastfood,
         hunger = users.hunger,
         happiness = users.happiness,
         sleep = users.sleep;
@@ -64,18 +67,20 @@ module.exports = {
         if(hunger>=100)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can't eat anymore.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         if(item == "Groceries"){
             if(groceries == 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You dont have any groceries.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
-            query = `
-                query($name:String){
-                    items(name:$name){
-                        values{
-                        usehappiness
-                        hunger
-                        sleep
-                        }
-                    }
-                }
-            `;
+        }else if(item == "Fast_Food"){
+            if(fastfood == 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You dont have any fast food.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         }
+        query = `
+        query($name:String){
+            items(name:$name){
+                values{
+                usehappiness
+                hunger
+                sleep
+                }
+            }
+        }
+    `;
     axios({
         url:config.APIurl,
         method:'post',
@@ -97,13 +102,15 @@ module.exports = {
             itemsleft = 0;
         if(full){
             eatcount = Math.ceil((100-hunger)/items.hunger);
-            if(eatcount>groceries)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You dont have enough ${item.toLowerCase()} to be full.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+            if(item == "Groceries" && eatcount>groceries)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You dont have enough ${item.toLowerCase()} to be full.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+            if(item == "Fast_Food" && eatcount>fastfood)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You dont have enough ${item.toLowerCase()} to be full.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         }
         happiness = ((eatcount*items.usehappiness)+happiness);
         hunger = ((eatcount*items.hunger)+hunger)
         if(hunger>100)hunger=100;
-        if(items.sleep)if(items.sleep>0)sleep = ((eatcount*items.sleep)+sleep);
+        if(items.sleep)if(items.sleep<0)sleep = ((eatcount*items.sleep)+sleep);
         if(item == "Groceries")itemsleft = (groceries-eatcount);
+        if(item == "Fast_Food")itemsleft = (fastfood-eatcount);
         if(items.usehappiness>0) happinessmsg = `, ${(eatcount*items.usehappiness)} happiness`;
         if(items.sleep)sleepmsg = `, ${(eatcount*items.sleep)} sleep`;
         eatmsg = `<@${msg.author.id}>, You ate ${eatcount} ${item.toLowerCase()} and gained ${(eatcount*items.hunger)} hunger${happinessmsg}${sleepmsg}.`;

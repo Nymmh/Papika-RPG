@@ -13,6 +13,10 @@ function userBuy(auth,discordId,money,happiness,item,amount){
             UserInventories.findOneAndUpdate({discordId:discordId},{groceries:amount},{new:true},(err,data)=>{
                 if(err)console.log(err);else console.log(data)
             });
+        }else if(item === "Fast_Food"){
+            UserInventories.findOneAndUpdate({discordId:discordId},{fastfood:amount},{new:true},(err,data)=>{
+                if(err)console.log(err);else console.log(data)
+            });
         }
     }
 }

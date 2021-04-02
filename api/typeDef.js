@@ -40,6 +40,7 @@ module.exports.typeDefs = gql`
         discordId:String,
         bed:[ItemValues],
         groceries:Int,
+        fastfood:Int,
     }
     type Cooldowns{
         name:String!,
