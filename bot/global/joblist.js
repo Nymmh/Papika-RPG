@@ -35,8 +35,8 @@ module.exports.joblist = (Ai, msg)=>{
              let jobs = result.data.data.jobs,
                  jobmsg = "";
              for(let jb in jobs){
-                 jobmsg += `**${jobs[jb].name}** >> Income: ${jobs[jb].income} > Job Tree: ${jobs[jb].group.replace("_"," ")}`;
+                 jobmsg += `**${jobs[jb].name}** >> Income: ${jobs[jb].income} > Job Tree: ${jobs[jb].group.replace("_"," ")}\n`;
              }
-             Ai.createMessage(msg.channel.id,jobmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+             return Ai.createMessage(msg.channel.id,jobmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
          });
 }
