@@ -131,7 +131,8 @@ module.exports = {
                             let newmoney = users.money-(price*amount),
                                 newhappiness = users.happiness,
                                 groceries = users.inventory[0].groceries,
-                                fastfood = users.inventory[0].fastfood;
+                                fastfood = users.inventory[0].fastfood,
+                                amountup = 0;
                             if(!groceries) groceries = 0;
                             if(!fastfood) fastfood = 0;
                             if(happinessonbuy)newhappiness+happinessonbuy;
@@ -164,7 +165,7 @@ module.exports = {
                             }).then(()=>{
                                 return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You bought ${amount} ${optionFix} for ${cost}${config.moneyname}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                             })
-                        }
+                        }else return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You dont have enough ${config.moneyname} to buy ${optionFix} ${Math.abs(users.money-(price*amount))}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                     })
             })
         }
