@@ -4,5 +4,6 @@ module.exports = {
     aliases: ['jquit', 'quitjob'],
     cooldown: 5,
     guildOnly: true,
+    channel: "job",
     task(Ai, msg){job.jobquit(Ai, msg);}
 }

@@ -4,5 +4,6 @@ module.exports = {
     aliases: ['jl'],
     cooldown: 5,
     guildOnly: true,
+    channel: "job",
     task(Ai, msg){joblist.joblist(Ai, msg);}
 }

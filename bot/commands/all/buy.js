@@ -8,6 +8,7 @@ module.exports = {
     usage: "<list> <group/food> <amount>",
     cooldown: 5,
     guildOnly: true,
+    channel: "store",
     task(Ai, msg, suffix){
     /**
      * perm checks

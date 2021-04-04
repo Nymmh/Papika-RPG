@@ -5,6 +5,7 @@ module.exports = {
     usage: "[apply] [Job Name]",
     cooldown: 5,
     guildOnly: true,
+    channel: "job",
     task(Ai, msg, suffix){
         if (!suffix) return 'wrong usage';
         job.jobapply(Ai, msg, suffix)

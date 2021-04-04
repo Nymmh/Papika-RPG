@@ -18,6 +18,8 @@
  * @prop {Set} usersOnCooldown track if the user is still on cooldown
  * @prop {Function} destoryFunction destroy at end
  * @prop {String} requiredPermission
+ * @prop {String} channel the channel that the command is locked to
+ * @prop {Boolean} beta if the command is a beta command
  */
 class Command{
     /**
@@ -41,6 +43,8 @@ class Command{
      * @arg {Client} Ai the client
      * @arg {Object} config Ai's config (handle with care)
      * @arg {String} [cmd.requiredPermission=null]
+     * @arg {String} [cmd.channel=""]
+     * @arg {Boolean} [cmd.beta=false]
      */
     constructor(name, prefix, cmd, Ai, config){
         this.name = name;
@@ -60,6 +64,8 @@ class Command{
         this.usersOnCooldown = new Set();
         this.destroyFunction = cmd.destroy;
         this.requiredAccess = cmd.requiredAccess || null;
+        this.channel = cmd.channel || "";
+        this.beta = !!cmd.beta;
         if(typeof cmd.initialize === 'function')cmd.initialize(Ai, config);
     }
     /**
@@ -84,7 +90,8 @@ class Command{
         return `**=> Command:**\`${this.prefix}${this.name} ${this.usage}\`
         **=> Info:** ${this.help}
         **=> Cooldown:** ${this.cooldown} seconds
-        **=> Aliases:** ${this.aliases.join(', ')||"None"}`;
+        **=> Aliases:** ${this.aliases.join(', ')||"None"}
+        **=> Channel:** ${this.channel || "All"}`;
     }
     /**
      * execute the command if wrong usage retures "wrong usage" will show {@link Command#correctUsage}
@@ -113,12 +120,25 @@ class Command{
               sentMsg.delete();
             }, 6000);
           });
+        if(this.beta === true && msg.channel.id !== "828379675100577804" && msg.channel.id !== "828376497705713715")return msg.delete();
         if (this.usersOnCooldown.has(msg.author.id)) { // Cooldown check
           return msg.channel.createMessage(`${msg.author.username}, this command can only be used every ${this.cooldown} seconds.`).then(sentMsg => {
             setTimeout(() => {
               msg.delete();
               sentMsg.delete();
             }, 6000);
+          });
+        }
+        if(this.channel !== "" && msg.channel.name != this.channel && msg.channel.id !== "828376497705713715"){
+          let channelid = "";
+          if(this.channel == "job")channelid = "828227608398266379";
+          else if(this.channel == "house")channelid = "828227743757500436";
+          else if(this.channel == "store")channelid = "828227627538055169";
+          return msg.channel.createMessage(`${msg.author.username}, this command can only be used in the <#${channelid}> channel`).then(sentMsg => {
+            setTimeout(() => {
+              msg.delete();
+              sentMsg.delete();
+            }, 10000);
           });
         }
         let result;

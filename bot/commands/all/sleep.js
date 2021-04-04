@@ -8,6 +8,7 @@ module.exports = {
     aliases: ['sl'],
     cooldown: 5,
     guildOnly: true,
+    channel: "house",
     task(Ai, msg){
     /**
      * perm checks

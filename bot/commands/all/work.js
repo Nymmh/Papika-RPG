@@ -5,5 +5,6 @@ module.exports = {
     aliases: ['wk', 'work'],
     cooldown: 20,
     guildOnly: true,
+    channel: "job",
     task(Ai, msg){job.jobwork(Ai, msg);}
 }
