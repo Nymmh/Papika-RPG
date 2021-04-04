@@ -17,6 +17,7 @@ module.exports.Users = mongoose.model("users",{
     engineeringDegree:Boolean,
     ROTCDegree:Boolean,
     culinaryDegree:Boolean,
+    businessDegree:Boolean,
     currentSchool:String,
     schoolDays:Number,
 });

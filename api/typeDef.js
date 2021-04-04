@@ -33,6 +33,7 @@ module.exports.typeDefs = gql`
         engineeringDegree:Boolean,
         ROTCDegree:Boolean,
         culinaryDegree:Boolean,
+        businessDegree:Boolean,
         currentSchool:String,
         schoolDays:Int,
         inventory:[Inventory]

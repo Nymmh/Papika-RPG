@@ -75,6 +75,8 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
                   hunger
                   nextbill
                   lastwork
+                  engineeringDegree
+                  businessDegree
                   jobinfo{
                     name
                     income
@@ -82,6 +84,8 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
                     minexp
                     maxexp
                     firedchance
+                    group
+                    rank
                   }
                 }
               }`,
@@ -115,10 +119,16 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
                 minexp = result.data.data.users[0].jobinfo[0].minexp,
                 maxexp = result.data.data.users[0].jobinfo[0].maxexp,
                 firedchance = result.data.data.users[0].jobinfo[0].firedchance,
+                jobrank = result.data.data.users[0].jobinfo[0].rank,
+                jobgroup = result.data.data.users[0].jobinfo[0].group,
                 jobexp = result.data.data.users[0].jobexp,
                 nextbill = result.data.data.users[0].nextbill,
-                lastwork = result.data.data.users[0].lastwork;
-            processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork);
+                lastwork = result.data.data.users[0].lastwork,
+                engineeringDegree = false,
+                businessDegree = false;
+            engineeringDegree = result.data.data.users[0].engineeringDegree;
+            businessDegree = result.data.data.users[0].businessDegree;
+            processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree);
         }
     });
 }
@@ -150,7 +160,7 @@ function jobChange(Ai, msg, value, sndmsg){
      });
 }
 
-function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork){
+function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree){
     let {handleBills} = require('./utils/handleBills');
     if((moment().unix() - Number(lastwork)) < cooldowns.work) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't work work for another ${Math.abs(((moment().unix() - Number(lastwork))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     let newmoney = (Number(money)+Number(income));
@@ -164,7 +174,8 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
         newexp = (jobexp + randomEXP),
         newnextbill = (nextbill - 1),
         firedRate = (Math.random() * (100 - 0 + 1) + 0).toFixed(3),
-        fired = false;
+        fired = false,
+        promotion = false;
     if(newSleep <= 0){
         //fell asleep at work
         firedchance = Math.abs((Number(firedchance)+newSleep));
@@ -174,10 +185,7 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
         firedchance = (Number(firedchance)+10);
         Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are starting to fall asleep at work.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     }
-    if(newSleep <= 25 && newSleep>10){
-        //falling alsleep
-        Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are getting tired.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
-    }
+    if(newSleep <= 25 && newSleep>10)Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are getting tired.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     console.log(firedRate)
     console.log(firedchance)
     if(Number(firedRate)<firedchance){
@@ -190,36 +198,76 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
         method:'post',
         data:{
             query:`
-            mutation($auth: String, $discordId: String, $money: Int, $happiness: Int, $hunger: Int, $sleep: Int, $jobexp: Int, $nextbill: Int) {
-                UserWork(auth: $auth, discordId: $discordId, money: $money, happiness: $happiness, hunger:$hunger sleep: $sleep, jobexp: $jobexp, nextbill:$nextbill) {
-                  discordId
+            query($group:JobGroup, $rank:Int){
+                jobs(group:$group, rank:$rank){
+                  _id
+                  reqexp
+                  name
+                  requiredSchool
                 }
-              }                  
+              }           
             `,
             variables:{
-                auth:config.APIAuth,
-                discordId:msg.author.id,
-                money:newmoney,
-                happiness:newHappiness,
-                sleep:newSleep,
-                hunger:newHunger,
-                jobexp:newexp,
-                nextbill:newnextbill,
+                group:jobgroup,
+                rank:(jobrank+1)
             },
             headers:{
                 'Content-Type':'application/json'
             },
         }
-    }).then(()=>{
-        logger.green(`User Change for ${msg.author.id} >> ${msg.author.username}`);
-        workmsg = `you worked at you job and gained ${income}${config.moneyname}'s`;
-        if(newnextbill == 0)handleBills(Ai,msg,newmoney)
-        if(fired){
-            workmsg = `you worked you last shift and gained ${income}${config.moneyname}'s`;
-            sndmsg = "dontsend";
-            value = "";
-            jobChange(Ai, msg, value, sndmsg)
+    }).then(result=>{
+        let nextjobxp = result.data.data.jobs[0].reqexp,
+            jobid = result.data.data.jobs[0]._id,
+            nextjobname = result.data.data.jobs[0].name,
+            requiredSchool = result.data.data.jobs[0].requiredSchool;
+        if(newexp >= nextjobxp){
+            if(requiredSchool == '')promotion = true;
+            else if(requiredSchool == 'Engineering'){
+                if(!engineeringDegree)Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, `).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+            }
         }
-        return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, ${workmsg}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+        axios({
+            url:config.APIurl,
+            method:'post',
+            data:{
+                query:`
+                mutation($auth: String, $discordId: String, $money: Int, $happiness: Int, $hunger: Int, $sleep: Int, $jobexp: Int, $nextbill: Int) {
+                    UserWork(auth: $auth, discordId: $discordId, money: $money, happiness: $happiness, hunger:$hunger sleep: $sleep, jobexp: $jobexp, nextbill:$nextbill) {
+                      discordId
+                    }
+                  }                  
+                `,
+                variables:{
+                    auth:config.APIAuth,
+                    discordId:msg.author.id,
+                    money:newmoney,
+                    happiness:newHappiness,
+                    sleep:newSleep,
+                    hunger:newHunger,
+                    jobexp:newexp,
+                    nextbill:newnextbill,
+                },
+                headers:{
+                    'Content-Type':'application/json'
+                },
+            }
+        }).then(()=>{
+            logger.green(`User Change for ${msg.author.id} >> ${msg.author.username}`);
+            workmsg = `you worked at you job and gained ${income}${config.moneyname}'s`;
+            if(newnextbill == 0)handleBills(Ai,msg,newmoney)
+            if(fired){
+                workmsg = `you worked you last shift and gained ${income}${config.moneyname}'s`;
+                sndmsg = "dontsend";
+                value = "";
+                jobChange(Ai, msg, value, sndmsg)
+            }
+            if(promotion){
+                workmsg = `you have been promoted to **${nextjobname}** and you gained ${income}${config.moneyname}'s`;
+                sndmsg = "dontsend";
+                value = jobid;
+                jobChange(Ai, msg, value, sndmsg)
+            }
+            return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, ${workmsg}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+        });
     });
 }

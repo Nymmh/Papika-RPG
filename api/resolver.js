@@ -29,7 +29,8 @@ module.exports = {
         },
         jobs(parent, args, context, info){
             if(args){
-                if(args.name) return Jobs.find({name:args.name});
+                if(args.group && args.rank)return Jobs.find({group:args.group,rank:args.rank});
+                else if(args.name) return Jobs.find({name:args.name});
                 else if(args.group) return Jobs.find({group:args.group});
                 else if(args.rank) return Jobs.find({rank:args.rank});
                 else return Jobs.find();

@@ -1,7 +1,8 @@
 let job = require('../../global/job');
+const handleError = require('../../util/utils.js').handleError;
 module.exports = {
     desc: "Work at your job",
-    aliases: ['jwork', 'work'],
+    aliases: ['wk', 'work'],
     cooldown: 20,
     guildOnly: true,
     task(Ai, msg){job.jobwork(Ai, msg);}
