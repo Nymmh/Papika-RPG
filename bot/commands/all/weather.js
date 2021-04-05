@@ -68,7 +68,7 @@ module.exports = {
                     },
                     {
                       name:"Humidity",
-                      value:weather.humidity,
+                      value:weather.humidity+"%",
                       inline:true
                     },
                     {
