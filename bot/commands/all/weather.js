@@ -63,7 +63,7 @@ module.exports = {
                     },
                     {
                         name:"Temperature",
-                        value:weather.temperature,
+                        value:weather.temperature+"°C",
                         inline:true
                     },
                     {
@@ -73,7 +73,7 @@ module.exports = {
                     },
                     {
                         name:"Wind",
-                        value:weather.wind,
+                        value:weather.wind+"kph",
                         inline:true
                     },
                 ]
