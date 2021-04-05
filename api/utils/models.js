@@ -20,6 +20,7 @@ module.exports.Users = mongoose.model("users",{
     businessDegree:Boolean,
     currentSchool:String,
     schoolDays:Number,
+    lastSchool:String,
 });
 module.exports.UserInventories = mongoose.model('userinventories',{
     discordId:String,

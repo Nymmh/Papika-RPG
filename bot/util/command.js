@@ -134,6 +134,7 @@ class Command{
           if(this.channel == "job")channelid = "828227608398266379";
           else if(this.channel == "house")channelid = "828227743757500436";
           else if(this.channel == "store")channelid = "828227627538055169";
+          else if(this.channel == "school")channelid = "828757664933609522"
           return msg.channel.createMessage(`${msg.author.username}, this command can only be used in the <#${channelid}> channel`).then(sentMsg => {
             setTimeout(() => {
               msg.delete();

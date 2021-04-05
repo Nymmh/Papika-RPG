@@ -154,7 +154,7 @@ function jobChange(Ai, msg, value, sndmsg){
                  'Content-Type':'application/json'
              },
          }
-     }).then(result=>{
+     }).then(()=>{
          logger.green(`User Change for ${msg.author.id} >> ${msg.author.username}`);
          if(sndmsg != "dontsend")return Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
      });
@@ -162,7 +162,7 @@ function jobChange(Ai, msg, value, sndmsg){
 
 function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree){
     let {handleBills} = require('./utils/handleBills');
-    if((moment().unix() - Number(lastwork)) < cooldowns.work) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't work work for another ${Math.abs(((moment().unix() - Number(lastwork))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+    if((moment().unix() - Number(lastwork)) < cooldowns.work) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't work for another ${Math.abs(((moment().unix() - Number(lastwork))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     let newmoney = (Number(money)+Number(income));
     let randomsleep = utils.getRandomInt(1,20),
         newSleep = (sleep - randomsleep),
@@ -223,7 +223,10 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
         if(newexp >= nextjobxp){
             if(requiredSchool == '')promotion = true;
             else if(requiredSchool == 'Engineering'){
-                if(!engineeringDegree)Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, `).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                if(!engineeringDegree){
+                    promotion = false;
+                    Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You do not have the ${requiredSchool} degree to be promoted.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                }
             }
         }
         axios({

@@ -1,10 +1,11 @@
-const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments} = require('./utils/models');
+const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments,Schools} = require('./utils/models');
 const {createUser} = require('./utils/createUser'),
       {modifyUser} = require('./utils/modifyUser'),
       {userWork} = require('./utils/userwork'),
       {userSleep} = require('./utils/userSleep'),
       {userBuy} = require('./utils/userBuy'),
-      {userEat} = require('./utils/userEat');
+      {userEat} = require('./utils/userEat'),
+      {userSchool} = require('./utils/userSchool');
 
 module.exports = {
     Query:{
@@ -41,6 +42,12 @@ module.exports = {
                 if(args.type)return Environments.find({type:args.type});
                 else return Environments.find();
             }
+        },
+        schools(parent, args, context, info){
+            if(args){
+                if(args.name) return Schools.find({name:args.name});
+                else return Schools.find();
+            }
         }
     },
     Mutation:{
@@ -49,7 +56,8 @@ module.exports = {
         UserWork: async(_,{auth,discordId,money,happiness,sleep,hunger,jobexp,nextbill,lastwork})=>{userWork(auth,discordId,money,happiness,sleep,hunger,jobexp,nextbill,lastwork)},
         UserSleep: async(_,{auth,discordId,sleep,happiness,hunger,reason})=>{userSleep(auth,discordId,sleep,happiness,hunger,reason)},
         UserBuy: async(_,{auth,discordId,money,happiness,item,amount})=>{userBuy(auth,discordId,money,happiness,item,amount)},
-        UserEat: async(_,{auth,discordId,hunger,happiness,sleep,item,itemsleft})=>{userEat(auth,discordId,hunger,happiness,sleep,item,itemsleft)}
+        UserEat: async(_,{auth,discordId,hunger,happiness,sleep,item,itemsleft})=>{userEat(auth,discordId,hunger,happiness,sleep,item,itemsleft)},
+        UserSchool: async(_,{auth,discordId,hunger,happiness,sleep,nextbill,schoolDays})=>{userSchool(auth,discordId,hunger,happiness,sleep,nextbill,schoolDays)}
     },
     Items:{
         async values(parent,args, context, info){
@@ -63,6 +71,9 @@ module.exports = {
         async inventory(parent,args, context, info){
             return UserInventories.find({discordId:parent.discordId})
         },
+        async schoolinfo(parent,args, context, info){
+            return Schools.find({name:parent.currentSchool})
+        }
     },
     Inventory:{
         async bed(parent,args, context, info){

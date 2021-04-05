@@ -7,6 +7,7 @@ module.exports.typeDefs = gql`
         items(name:String,group:ItemGroup):[Items!]
         jobs(name:String,group:JobGroup,rank:Int):[Jobs!]
         environments(type:EnvironmentType):[Environment!]
+        schools(name:String):[School!]
     }
     type Mutation {
         createUser(auth:String,discordId:String,name:String,avatar:String):[Profile]
@@ -15,6 +16,7 @@ module.exports.typeDefs = gql`
         UserSleep(auth:String,discordId:String,sleep:Int,happiness:Int,hunger:Int,reason:String):[Profile]
         UserBuy(auth:String,discordId:String,money:Int,happiness:Int,item:String,amount:Int):[Profile]
         UserEat(auth:String,discordId:String,hunger:Int,happiness:Int,sleep:Int,item:String,itemsleft:Int):[Profile]
+        UserSchool(auth:String,discordId:String,hunger:Int,happiness:Int,sleep:Int,nextbill:Int,schoolDays:Int):[Profile]
     }
     type Profile{
         discordId:String!,
@@ -35,7 +37,9 @@ module.exports.typeDefs = gql`
         culinaryDegree:Boolean,
         businessDegree:Boolean,
         currentSchool:String,
+        schoolinfo:[School],
         schoolDays:Int,
+        lastSchool:String,
         inventory:[Inventory]
     }
     type Inventory{
@@ -88,6 +92,11 @@ module.exports.typeDefs = gql`
         temperature:String,
         humidity:String,
         wind:String
+    }
+    type School{
+        name:String!,
+        price:Int!,
+        days:Int!
     }
 
     enum ItemGroup{
