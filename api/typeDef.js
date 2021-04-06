@@ -108,6 +108,11 @@ module.exports.typeDefs = gql`
     }
     enum JobGroup{
         Japari_Park
+        Hospital
+        NBA
+        Office_Worker
+        Police
+        Restaurant
     }
     enum EnvironmentType{
         Weather
