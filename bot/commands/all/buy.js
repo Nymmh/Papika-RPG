@@ -59,7 +59,7 @@ module.exports = {
                     if(items[it].values[vt].hunger)valuemsg += ` > Hunger gained >> ${items[it].values[vt].hunger}`;
                     if(items[it].values[vt].sleep)valuemsg += ` > Sleep gained >> ${items[it].values[vt].sleep}`;
                     if(items[it].values[vt].happinessbuy)valuemsg += ` > Happiness gained on buy >> ${items[it].values[vt].happinessbuy}`;
-                    if(items[it].values[vt].cooldown)valuemsg += ` > Cooldown gained >> ${items[it].values[vt].cooldown}`;
+                    if(items[it].values[vt].cooldown)valuemsg += ` > Cooldown >> ${items[it].values[vt].cooldown}`;
                 }
                 msgsend += "```"+`${items[it].name} >> ${items[it].price}${config.moneyname}${valuemsg}\n`+"```";
             }

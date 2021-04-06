@@ -2,7 +2,7 @@ let job = require('../../global/job');
 module.exports = {
     desc: "Apply to a job job",
     aliases: ['japply', 'applyjob'],
-    usage: "[apply] [Job Name]",
+    usage: "[Job Name]",
     cooldown: 5,
     guildOnly: true,
     channel: "job",

@@ -17,6 +17,16 @@ function modifyUser(auth,discordId,reason,value){
                 }
             });
         }
+        if(reason == "jobpromote"){
+            Users.find({discordId:discordId},(err,res)=>{
+                if(!err) if(res[0]){
+                    console.log("Modifying user");
+                    Users.findOneAndUpdate({discordId:discordId},{job:value},{new:true},(err,data)=>{
+                        if(err)console.log(err);else console.log(data)
+                    });
+                }
+            });
+        }
         if(reason == "bills"){
             Users.find({discordId:discordId},(err,res)=>{
                 if(!err) if(res[0]){

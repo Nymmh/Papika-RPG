@@ -132,6 +132,33 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
         }
     });
 }
+function jobPromotion(Ai, msg, value, sndmsg){
+    axios({
+        url:config.APIurl,
+        method:'post',
+        data:{
+            query:`
+            mutation($auth: String, $discordId: String, $reason: String, $value: String) {
+               modifyUser(auth: $auth, discordId: $discordId, reason: $reason, value: $value) {
+                  discordId
+                }
+              }                  
+            `,
+            variables:{
+                auth:config.APIAuth,
+                discordId:msg.author.id,
+                reason:"jobpromote",
+                value:value
+            },
+            headers:{
+                'Content-Type':'application/json'
+            },
+        }
+    }).then(()=>{
+        logger.green(`User Change for ${msg.author.id} >> ${msg.author.username}`);
+        if(sndmsg != "dontsend")return Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+    });
+}
 function jobChange(Ai, msg, value, sndmsg){
      axios({
          url:config.APIurl,
@@ -268,7 +295,7 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
                 workmsg = `you have been promoted to **${nextjobname}** and you gained ${income}${config.moneyname}'s`;
                 sndmsg = "dontsend";
                 value = jobid;
-                jobChange(Ai, msg, value, sndmsg)
+                jobPromotion(Ai, msg, value, sndmsg)
             }
             return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, ${workmsg}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         });

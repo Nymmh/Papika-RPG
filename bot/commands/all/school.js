@@ -193,19 +193,19 @@ module.exports = {
                 let currentSchool = result.data.data.users[0].currentSchool;
                 if(currentSchool == undefined || currentSchool == "")return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are currently not in school.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                 let lastschool = result.data.data.users[0].lastSchool
-                if((moment().unix() - Number(lastschool)) < cooldowns.work) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't attend class for another ${Math.abs(((moment().unix() - Number(lastschool))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
-                let schoolDays = result.data.data.schoolDays,
-                    happiness = result.data.data.happiness,
-                    sleep = result.data.data.sleep,
-                    hunger = result.data.data.hunger,
-                    nextbill = result.data.data.nextbill,
-                    money = result.data.data.money,
+                if((moment().unix() - Number(lastschool)) < cooldowns.school) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't attend class for another ${Math.abs(((moment().unix() - Number(lastschool))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                let schoolDays = result.data.data.users[0].schoolDays,
+                    happiness = result.data.data.users[0].happiness,
+                    sleep = result.data.data.users[0].sleep,
+                    hunger = result.data.data.users[0].hunger,
+                    nextbill = result.data.data.users[0].nextbill,
+                    money = result.data.data.users[0].money,
                     randomSleep = utils.getRandomInt(5,20),
                     randomHunger = utils.getRandomInt(1,15),
                     randomHappiness = utils.getRandomInt(1,5),
                     schoolDone = false;
                 nextbill = (nextbill-1);
-                schoolDays = (schoolDays-1);
+                schoolDays = (schoolDays - 1);
                 happiness = (happiness - randomHappiness);
                 sleep = (sleep-randomSleep);
                 hunger = (hunger-randomHunger);
@@ -217,7 +217,7 @@ module.exports = {
                     data:{
                         query:`
                         mutation($auth: String, $discordId: String, $hunger: Int, $happiness: Int, $sleep: Int, $nextbill: Int, $schoolDays: Int) {
-                           modifyUser(auth: $auth, discordId: $discordId, hunger: $hunger, happiness: $happiness, sleep: $sleep, nextbill: $nextbill, schoolDays: $schoolDays) {
+                            UserSchool(auth: $auth, discordId: $discordId, hunger: $hunger, happiness: $happiness, sleep: $sleep, nextbill: $nextbill, schoolDays: $schoolDays) {
                               discordId
                             }
                           }                  
@@ -261,7 +261,7 @@ module.exports = {
                         }).then(()=>{
                             return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you finished your schooling for ${currentSchool}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                         });
-                    }else return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, only ${schoolDays} days of class.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                    }else return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, only ${schoolDays} days of class left.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                 });
             });
         }
