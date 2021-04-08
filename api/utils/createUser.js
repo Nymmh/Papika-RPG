@@ -10,9 +10,9 @@ function createUser(auth,discordId,name,avatar){
             if(!err) if(!res[0]){
                 console.log("creating user");
                 let newUser = new Users({discordId:discordId,name:name,avatar:`https://cdn.discordapp.com/avatars/${discordId}/${avatar}`,money:10,happiness:100,sleep:100,hunger:100,jobexp:0,nextbill:30});
-                newUser.save().then(res=>{
+                newUser.save().then(()=>{
                     let newUsersInv = new UserInventories({discordId:discordId,bed:"60644135aa88ed348b1d5764"});
-                    newUsersInv.save().then(res=>{
+                    newUsersInv.save().then(()=>{
                         console.log("new user created")
                     });
                 });

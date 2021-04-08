@@ -21,6 +21,8 @@ module.exports.Users = mongoose.model("users",{
     currentSchool:String,
     schoolDays:Number,
     lastSchool:String,
+    gang:String,
+    gangInvites:String,
 });
 module.exports.UserInventories = mongoose.model('userinventories',{
     discordId:String,
@@ -74,4 +76,14 @@ module.exports.Environments = mongoose.model("environments",{
     temperature:String,
     humidity:String,
     wind:String
+});
+module.exports.Gangs = mongoose.model("gangs",{
+    name:String,
+    members:Number,
+    funds:Number,
+    icon:String,
+    crimes:Number,
+    leader:String,
+    invites:String,
+    color:String
 });

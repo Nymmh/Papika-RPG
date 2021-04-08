@@ -1,11 +1,12 @@
-const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments,Schools} = require('./utils/models');
+const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments,Schools,Gangs} = require('./utils/models');
 const {createUser} = require('./utils/createUser'),
       {modifyUser} = require('./utils/modifyUser'),
       {userWork} = require('./utils/userwork'),
       {userSleep} = require('./utils/userSleep'),
       {userBuy} = require('./utils/userBuy'),
       {userEat} = require('./utils/userEat'),
-      {userSchool} = require('./utils/userSchool');
+      {userSchool} = require('./utils/userSchool'),
+      {createGang,sendGangInvite} = require('./utils/Gangs');
 
 module.exports = {
     Query:{
@@ -48,6 +49,13 @@ module.exports = {
                 if(args.name) return Schools.find({name:args.name});
                 else return Schools.find();
             }
+        },
+        gangs(parent, args, context, info){
+            if(args){
+                if(args.name) return Gangs.find({name:args.name});
+                else if(args.id) return Gangs.find({_id:args.id});
+                else return Gangs.find();
+            }
         }
     },
     Mutation:{
@@ -57,7 +65,9 @@ module.exports = {
         UserSleep: async(_,{auth,discordId,sleep,happiness,hunger,reason})=>{userSleep(auth,discordId,sleep,happiness,hunger,reason)},
         UserBuy: async(_,{auth,discordId,money,happiness,item,amount})=>{userBuy(auth,discordId,money,happiness,item,amount)},
         UserEat: async(_,{auth,discordId,hunger,happiness,sleep,item,itemsleft})=>{userEat(auth,discordId,hunger,happiness,sleep,item,itemsleft)},
-        UserSchool: async(_,{auth,discordId,hunger,happiness,sleep,nextbill,schoolDays})=>{userSchool(auth,discordId,hunger,happiness,sleep,nextbill,schoolDays)}
+        UserSchool: async(_,{auth,discordId,hunger,happiness,sleep,nextbill,schoolDays})=>{userSchool(auth,discordId,hunger,happiness,sleep,nextbill,schoolDays)},
+        createGang: async(_,{auth,discordId,name,reason})=>{createGang(auth,discordId,name,reason)},
+        sendGangInvite: async(_,{auth,discordId,reason,gangid,userid})=>{sendGangInvite(auth,discordId,reason,gangid,userid)},
     },
     Items:{
         async values(parent,args, context, info){
@@ -73,6 +83,9 @@ module.exports = {
         },
         async schoolinfo(parent,args, context, info){
             return Schools.find({name:parent.currentSchool})
+        },
+        async ganginfo(parent,args,context,info){
+            return Gangs.find({_id:parent.gang})
         }
     },
     Inventory:{
