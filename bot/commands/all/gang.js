@@ -366,6 +366,7 @@ module.exports = {
                         if(value.name == gangname)msg.guild.removeMemberRole(msg.author.id,value.id,'Left Gang');
                     }
                     new Map(msg.guild.roles).forEach(leavegang)
+                    msg.guild.removeMemberRole(msg.author.id,'829465655740334100','Removed Gangs role');
                     const gangleader = findMember(msg, leader);
                     gangleader.getDMChannel().then(dmch=>{dmch.createMessage(`**${msg.author.username}#${msg.author.discriminator}** left your gang.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});}).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                     return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you left the gang ${gangname}.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});

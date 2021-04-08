@@ -244,6 +244,7 @@ module.exports = {
                             if(value.name == gangname)msg.guild.addMemberRole(msg.author.id,value.id,'Joined Gang');
                         }
                         new Map(msg.guild.roles).forEach(joingang)
+                        msg.guild.addMemberRole(msg.author.id,'829465655740334100','Added Gangs role');
                         const gangleader = findMember(msg, leader);
                         gangleader.getDMChannel().then(dmch=>{dmch.createMessage(`**${msg.author.username}#${msg.author.discriminator}** joined your gang.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});}).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                         return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you joined the gang ${gangname}.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
