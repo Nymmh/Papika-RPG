@@ -36,7 +36,6 @@ module.exports = {
                 if(gangInvites == null || gangInvites == '')return msg.author.getDMChannel().then(dmch=>{dmch.createMessage(`You have no pending invites.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});}).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                 let invites = gangInvites.split(','),
                     invitemsg = '';
-                console.log(invites)
                 for(let i = 0;i<invites.length;i++){
                     axios({
                         url:config.APIurl,

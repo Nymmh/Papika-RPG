@@ -26,7 +26,6 @@ module.exports = (Ai,member, guild)=>{
                 },
             }
         }).then(result=>{
-            console.log(result)
             logger.green(`New User Created for ${member.user.id} >> ${member.user.username}`);
             member.user.getDMChannel().then(dmch=>{
                 dmch.createMessage("Welcome to Papika RPG, check out the #getting-started channel to learn how to play.").catch(err => {handleError(Ai, __filename, msg.channel, err)});

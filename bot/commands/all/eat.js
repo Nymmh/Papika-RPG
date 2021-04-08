@@ -27,8 +27,6 @@ module.exports = {
     }
     let item = food.replace(/(_)/g,' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g,lt=>lt.toUpperCase()).replace(/( )/g,'_');
     if(item == "Fastfood")item = "Fast_Food";
-    console.log(item)
-    console.log(full)
     axios({
         url:config.APIurl,
         method:'post',
