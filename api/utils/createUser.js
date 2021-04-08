@@ -1,4 +1,4 @@
-const {Users,UserInventories} = require('./models');
+const {Users,UserInventories,UserHouseInventory} = require('./models');
 let config = require('../json/config.json');
 
 exports.createUser = (auth,discordId,name,avatar)=>{
@@ -11,9 +11,12 @@ function createUser(auth,discordId,name,avatar){
                 console.log("creating user");
                 let newUser = new Users({discordId:discordId,name:name,avatar:`https://cdn.discordapp.com/avatars/${discordId}/${avatar}`,money:10,happiness:100,sleep:100,hunger:100,jobexp:0,nextbill:30});
                 newUser.save().then(()=>{
-                    let newUsersInv = new UserInventories({discordId:discordId,bed:"60644135aa88ed348b1d5764"});
+                    let newUsersInv = new UserInventories({discordId:discordId,maxSpace:5});
                     newUsersInv.save().then(()=>{
-                        console.log("new user created")
+                        let newHouseInv = new UserHouseInventory({discordId:discordId,bed:"60644135aa88ed348b1d5764",maxSpace:15});
+                        newHouseInv.save().then(()=>{
+                            console.log("new user created")
+                        })
                     });
                 });
             }

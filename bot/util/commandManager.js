@@ -123,7 +123,7 @@ class CommandManager{
         this.logger.logCommand(msg.channel.guild === undefined ? null : msg.channel.guild.name, msg.author.username, this.prefix + 'help', command);
         if(!command){
             let messageQueue = [];
-            let currentMessage = `\n//My command list. For info on a command do ${this.prefix} help <command>`;
+            let currentMessage = `\n//My command list.`;
             for(let cmd in this.commands){
                 if(this.commands[cmd].hidden === true) continue;
                 let toAdd = this.commands[cmd].helpDM;

@@ -1,4 +1,4 @@
-const {Users,UserInventories,Items} = require('./models');
+const {Users,UserInventories,Items,UserHouseInventory} = require('./models');
 let config = require('../json/config.json');
 
 exports.userBuy = (auth,discordId,money,happiness,item,amount)=>{
@@ -20,7 +20,7 @@ function userBuy(auth,discordId,money,happiness,item,amount){
         }else if(item.match(/(Bed_Tier_)/)){
             Items.findOne({name:item},(err,res)=>{
                 itemId = res._id;
-                UserInventories.findOneAndUpdate({discordId:discordId},{bed:itemId},{new:true},(err,data)=>{
+                UserHouseInventory.findOneAndUpdate({discordId:discordId},{bed:itemId},{new:true},(err,data)=>{
                     if(err)console.log(err);else console.log(data)
                 });
             });

@@ -6,6 +6,7 @@ module.exports = {
     usage: "[command/help]",
     cooldown: 15,
     guildOnly: true,
+    hidden:true,
     channel: "job",
     task(Ai, msg, suffix){
         if(suffix == "list")joblist.joblist(Ai,msg);

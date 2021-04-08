@@ -27,7 +27,7 @@ module.exports = {
                   happiness
                   hunger
                   lastsleep
-                  inventory{
+                  houseInventory{
                     discordId
                     bed{
                       sleep
@@ -50,14 +50,14 @@ module.exports = {
         let users = result.data.data.users[0],
             userLastSleep = users.lastsleep,
             sleep = users.sleep,
-            bedSleep = users.inventory[0].bed[0].sleep,
+            bedSleep = users.houseInventory[0].bed[0].sleep,
             newSleep = (sleep+bedSleep);
             happiness = users.happiness,
             hunger = users.hunger,
-            bedCooldown = users.inventory[0].bed[0].cooldown,
-            bedBadSleep = users.inventory[0].bed[0].badsleep,
+            bedCooldown = users.houseInventory[0].bed[0].cooldown,
+            bedBadSleep = users.houseInventory[0].bed[0].badsleep,
             badSleep = utils.getRandomInt(0,100),
-            badSleepMax = users.inventory[0].bed[0].badsleepmax,
+            badSleepMax = users.houseInventory[0].bed[0].badsleepmax,
             badnightSleep = false;
         if(sleep>=100)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you cant sleep anymore.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         if(newSleep>100)newSleep = 100;
@@ -96,7 +96,7 @@ module.exports = {
                         'Content-Type':'application/json'
                     },
                 }
-            }).then(result=>{
+            }).then(()=>{
                 if(badnightSleep) sndmsg = `<@${msg.author.id}>, you had a bad nights sleep and gained ${(newSleep-sleep)} sleep.`;
                 else sndmsg = `<@${msg.author.id}>, you had a good nights sleep and gained ${bedSleep} sleep.`;
                 Ai.createMessage(msg.channel.id,sndmsg).catch(err => {handleError(Ai, __filename, msg.channel, err)});

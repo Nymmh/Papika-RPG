@@ -26,6 +26,13 @@ module.exports.Users = mongoose.model("users",{
 });
 module.exports.UserInventories = mongoose.model('userinventories',{
     discordId:String,
+    maxSpace:Number,
+    groceries:Number,
+    fastfood:Number,
+});
+module.exports.UserHouseInventory = mongoose.model('houseinventory',{
+    discordId:String,
+    maxSpace:Number,
     bed:String,
     groceries:Number,
     fastfood:Number,

@@ -1,4 +1,4 @@
-const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments,Schools,Gangs} = require('./utils/models');
+const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments,Schools,Gangs, UserHouseInventory} = require('./utils/models');
 const {createUser} = require('./utils/createUser'),
       {modifyUser} = require('./utils/modifyUser'),
       {userWork} = require('./utils/userwork'),
@@ -6,7 +6,8 @@ const {createUser} = require('./utils/createUser'),
       {userBuy} = require('./utils/userBuy'),
       {userEat} = require('./utils/userEat'),
       {userSchool} = require('./utils/userSchool'),
-      {createGang,sendGangInvite} = require('./utils/Gangs');
+      {createGang,sendGangInvite} = require('./utils/Gangs'),
+      {purgeServer} = require('./utils/purgeServer');
 
 module.exports = {
     Query:{
@@ -68,6 +69,7 @@ module.exports = {
         UserSchool: async(_,{auth,discordId,hunger,happiness,sleep,nextbill,schoolDays})=>{userSchool(auth,discordId,hunger,happiness,sleep,nextbill,schoolDays)},
         createGang: async(_,{auth,discordId,name,reason})=>{createGang(auth,discordId,name,reason)},
         sendGangInvite: async(_,{auth,discordId,reason,gangid,userid})=>{sendGangInvite(auth,discordId,reason,gangid,userid)},
+        purgeServer: async(_,{auth})=>{purgeServer(auth)},
     },
     Items:{
         async values(parent,args, context, info){
@@ -81,6 +83,9 @@ module.exports = {
         async inventory(parent,args, context, info){
             return UserInventories.find({discordId:parent.discordId})
         },
+        async houseInventory(parent,args, context, info){
+            return UserHouseInventory.find({discordId:parent.discordId})
+        },
         async schoolinfo(parent,args, context, info){
             return Schools.find({name:parent.currentSchool})
         },
@@ -88,7 +93,7 @@ module.exports = {
             return Gangs.find({_id:parent.gang})
         }
     },
-    Inventory:{
+    House:{
         async bed(parent,args, context, info){
             return ItemValues.find({parent:parent.bed});
         }

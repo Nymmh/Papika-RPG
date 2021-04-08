@@ -108,7 +108,7 @@ module.exports = {
                                 users(discordId:$discordID){
                                   money
                                   happiness
-                                  inventory{
+                                  houseInventory{
                                     bed{
                                         name
                                     }
@@ -137,7 +137,7 @@ module.exports = {
                             if(!groceries) groceries = 0;
                             if(!fastfood) fastfood = 0;
                             if(happinessonbuy)newhappiness+happinessonbuy;
-                            if(users.inventory[0].bed[0].name == optionFix)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy a bed you already own.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                            if(users.houseInventory[0].bed[0].name == optionFix)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy a bed you already own.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                             if(optionFix == "Groceries")amountup = groceries+amount;
                             else if (optionFix == "Fast_Food")amountup = fastfood+amount;
                             axios({
