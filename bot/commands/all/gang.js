@@ -363,7 +363,7 @@ module.exports = {
                     }
                 }).then(()=>{
                     function leavegang(value, keys, map){
-                        if(value.name == gangname)msg.guild.removeMemberRole(msg.author.id,value.id,'Joined Gang');
+                        if(value.name == gangname)msg.guild.removeMemberRole(msg.author.id,value.id,'Left Gang');
                     }
                     new Map(msg.guild.roles).forEach(leavegang)
                     const gangleader = findMember(msg, leader);
