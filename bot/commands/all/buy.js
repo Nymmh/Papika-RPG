@@ -72,6 +72,7 @@ module.exports = {
             let amount = 1;
             if(options[2])amount = Number(options[2]);
             else if(options[1])amount = Number(options[1]);
+            if(amount == 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy 0 of an item.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             if(amount % 1 != 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can only buy whole numbers of items.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             let optionFix = option.replace(/(_)/g,' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g,lt=>lt.toUpperCase()).replace(/( )/g,'_');
             axios({
@@ -112,9 +113,13 @@ module.exports = {
                                     bed{
                                         name
                                     }
+                                  }
+                                  inventory{
                                     groceries
                                     fastfood
-                                  }
+                                    usedSpace
+                                    maxSpace
+                                }
                                 }
                               }
                             `,
@@ -133,7 +138,10 @@ module.exports = {
                                 newhappiness = users.happiness,
                                 groceries = users.inventory[0].groceries,
                                 fastfood = users.inventory[0].fastfood,
-                                amountup = 0;
+                                amountup = 0,
+                                usedSpace = users.inventory[0].usedSpace,
+                                maxSpace = users.inventory[0].maxSpace;
+                            if((usedSpace+amount)>maxSpace)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You don't have the inventory space to buy that many.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                             if(!groceries) groceries = 0;
                             if(!fastfood) fastfood = 0;
                             if(happinessonbuy)newhappiness+happinessonbuy;

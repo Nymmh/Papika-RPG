@@ -7,7 +7,8 @@ const {createUser} = require('./utils/createUser'),
       {userEat} = require('./utils/userEat'),
       {userSchool} = require('./utils/userSchool'),
       {createGang,sendGangInvite} = require('./utils/Gangs'),
-      {purgeServer} = require('./utils/purgeServer');
+      {purgeServer} = require('./utils/purgeServer'),
+      {userStash} = require('./utils/userStash');
 
 module.exports = {
     Query:{
@@ -69,6 +70,7 @@ module.exports = {
         UserSchool: async(_,{auth,discordId,hunger,happiness,sleep,nextbill,schoolDays})=>{userSchool(auth,discordId,hunger,happiness,sleep,nextbill,schoolDays)},
         createGang: async(_,{auth,discordId,name,reason})=>{createGang(auth,discordId,name,reason)},
         sendGangInvite: async(_,{auth,discordId,reason,gangid,userid})=>{sendGangInvite(auth,discordId,reason,gangid,userid)},
+        userStoreItem: async(_,{auth,discordId,item,amount,reason})=>{userStash(auth,discordId,item,amount,reason)},
         purgeServer: async(_,{auth})=>{purgeServer(auth)},
     },
     Items:{

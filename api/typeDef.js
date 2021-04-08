@@ -20,6 +20,7 @@ module.exports.typeDefs = gql`
         UserSchool(auth:String,discordId:String,hunger:Int,happiness:Int,sleep:Int,nextbill:Int,schoolDays:Int):[Profile]
         createGang(auth:String,discordId:String,name:String,reason:String):[Gangs]
         sendGangInvite(auth:String,discordId:String,reason:String,gangid:String,userid:String):[Gangs]
+        userStoreItem(auth:String,discordId:String,item:String,amount:Int,reason:String):[Profile]
         purgeServer(auth:String):[Profile]
     }
     type Profile{
@@ -53,13 +54,17 @@ module.exports.typeDefs = gql`
     type Inventory{
         discordId:String,
         maxSpace:Int,
+        usedSpace:Int,
+        backpack:Boolean,
         groceries:Int,
         fastfood:Int,
     }
     type House{
         discordId:String,
         maxSpace:Int,
+        usedSpace:Int,
         tier:Int,
+        storageUpgrade:Int,
         bed:[ItemValues],
         groceries:Int,
         fastfood:Int,
