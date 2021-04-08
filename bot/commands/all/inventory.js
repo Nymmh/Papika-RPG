@@ -20,6 +20,15 @@ module.exports = {
                         usedSpace
                         maxSpace
                     }
+                    houseInventory{
+                        bed{
+                            name
+                        }
+                        groceries
+                        fastfood
+                        usedSpace
+                        maxSpace
+                    }
                 }
               }
             `,
@@ -34,17 +43,23 @@ module.exports = {
         let invmsgst = "```",
             invmsged = "```",
             invmsgPerm = "",
-            invmsgTemp = "";
+            invmsgTemp = "",
+            houseinvTemp = "";
         for(let iv in result.data.data.users[0].inventory){
-            // let keys = Object.keys(result.data.data.users[0].inventory[iv]);
-            // for(let ky in keys){
-            //     if(keys[ky] == "bed")invmsgPerm += result.data.data.users[0].inventory[iv].bed[0].name;
-            // }
             if(result.data.data.users[0].inventory[iv].groceries)invmsgTemp += `Groceries >> ${result.data.data.users[0].inventory[iv].groceries}\n`;
             if(result.data.data.users[0].inventory[iv].fastfood)invmsgTemp += `Fast Food >> ${result.data.data.users[0].inventory[iv].fastfood}\n`;
         }
+        for(let iv in result.data.data.users[0].houseInventory){
+            let keys = Object.keys(result.data.data.users[0].houseInventory[iv]);
+            for(let ky in keys){
+                if(keys[ky] == "bed")invmsgPerm += result.data.data.users[0].houseInventory[iv].bed[0].name;
+            }
+            if(result.data.data.users[0].houseInventory[iv].groceries)houseinvTemp += `Groceries >> ${result.data.data.users[0].houseInventory[iv].groceries}\n`;
+            if(result.data.data.users[0].houseInventory[iv].fastfood)houseinvTemp += `Fast Food >> ${result.data.data.users[0].houseInventory[iv].fastfood}\n`;
+        }
         if(invmsgTemp == '')invmsgTemp = "Empty";
-        return msg.author.getDMChannel().then(dmch=>{dmch.createMessage("Inventory "+result.data.data.users[0].inventory[0].usedSpace+"/"+result.data.data.users[0].inventory[0].maxSpace+"\n"+invmsgst+invmsgTemp+invmsged).catch(err => {handleError(Ai, __filename, msg.channel, err)});}).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+        msg.author.getDMChannel().then(dmch=>{dmch.createMessage("Inventory "+result.data.data.users[0].inventory[0].usedSpace+"/"+result.data.data.users[0].inventory[0].maxSpace+"\n"+invmsgst+invmsgTemp+invmsged).catch(err => {handleError(Ai, __filename, msg.channel, err)});}).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+        return msg.author.getDMChannel().then(dmch=>{dmch.createMessage("House inventory "+result.data.data.users[0].houseInventory[0].usedSpace+"/"+result.data.data.users[0].houseInventory[0].maxSpace+"\n"+invmsgst+houseinvTemp+invmsgPerm+invmsged).catch(err => {handleError(Ai, __filename, msg.channel, err)});}).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     });
     }
 }
