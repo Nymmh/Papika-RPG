@@ -46,25 +46,54 @@ module.exports = {
                     method:'post',
                     data:{
                         query:`
-                        mutation($auth:String,$discordId:String,$item:String,$amount:Int,$reason:String){
-                            userStoreItem(auth:$auth,discordId:$discordId,item:$item,amount:$amount,reason:$reason){
-                              discordId
+                        query($discordID:String){
+                            users(discordId:$discordID){
+                                houseInventory{
+                                    bed{
+                                        name
+                                    }
+                                    groceries
+                                    fastfood
+                                    usedSpace
+                                    maxSpace
+                                }
                             }
                           }
                         `,
                         variables:{
-                            auth:config.APIAuth,
-                            discordId:msg.author.id,
-                            item:optionFix,
-                            amount:amount,
-                            reason:"store"
+                            discordID:msg.author.id
                         },
                         headers:{
                             'Content-Type':'application/json'
                         },
                     }
-                }).then(()=>{
-                    return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you stored ${amount} ${optionFix} in your house.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                }).then(result=>{
+                    if((result.data.data.users[0].houseInventory[0].usedSpace+amount)>result.data.data.users[0].houseInventory[0].maxSpace)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, your house doesn't have enough space to store that much.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                    axios({
+                        url:config.APIurl,
+                        method:'post',
+                        data:{
+                            query:`
+                            mutation($auth:String,$discordId:String,$item:String,$amount:Int,$reason:String){
+                                userStoreItem(auth:$auth,discordId:$discordId,item:$item,amount:$amount,reason:$reason){
+                                  discordId
+                                }
+                              }
+                            `,
+                            variables:{
+                                auth:config.APIAuth,
+                                discordId:msg.author.id,
+                                item:optionFix,
+                                amount:amount,
+                                reason:"store"
+                            },
+                            headers:{
+                                'Content-Type':'application/json'
+                            },
+                        }
+                    }).then(()=>{
+                        return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you stored ${amount} ${optionFix} in your house.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                    })
                 })
             })
         }
