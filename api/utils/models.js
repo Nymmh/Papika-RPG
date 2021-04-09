@@ -37,6 +37,8 @@ module.exports.UserHouseInventory = mongoose.model('houseinventory',{
     maxSpace:Number,
     usedSpace:Number,
     storageUpgrade:Number,
+    house:String,
+    security:String,
     bed:String,
     groceries:Number,
     fastfood:Number,
@@ -78,7 +80,9 @@ module.exports.ItemValues = mongoose.model("itemvalues",{
     happinessbuy:Number,
     badsleep:Number,
     cooldown:Number,
-    badsleepmax:Number
+    badsleepmax:Number,
+    rentCost:Number,
+    storage:Number,
 });
 module.exports.Environments = mongoose.model("environments",{
     type:String,

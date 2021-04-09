@@ -61,6 +61,7 @@ module.exports.typeDefs = gql`
     }
     type House{
         discordId:String,
+        house:[ItemValues]
         maxSpace:Int,
         usedSpace:Int,
         tier:Int,
@@ -68,6 +69,7 @@ module.exports.typeDefs = gql`
         bed:[ItemValues],
         groceries:Int,
         fastfood:Int,
+        security:Int,
     }
     type Cooldowns{
         name:String!,
@@ -90,7 +92,9 @@ module.exports.typeDefs = gql`
         happinessbuy:Int,
         badsleep:Int,
         cooldown:Int,
-        badsleepmax:Int
+        badsleepmax:Int,
+        storage:Int,
+        rentCost:Int,
     }
     type Jobs{
         _id:String!,
@@ -133,6 +137,7 @@ module.exports.typeDefs = gql`
     enum ItemGroup{
         Food
         Bed
+        House
     },
     enum ItemStore{
         civilian

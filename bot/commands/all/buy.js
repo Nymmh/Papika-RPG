@@ -19,7 +19,7 @@ module.exports = {
     if (sendMessages === false) return;
     if(!suffix) return 'wrong usage';
     let options = suffix.split(" ");
-    let groups = ['food','bed'];
+    let groups = ['food','bed','house'];
     if(options[0] == 'list'){
         if(!groups.includes(options[1]))return Ai.createMessage(msg.channel.id,`The options for ~buy list is `+"``"+`${groups}`+"``"+``).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         axios({
@@ -37,6 +37,8 @@ module.exports = {
                             sleep
                             happinessbuy
                             cooldown
+                            storage
+                            rentCost
                         }
                     }
                   }
@@ -60,6 +62,8 @@ module.exports = {
                     if(items[it].values[vt].sleep)valuemsg += ` > Sleep gained >> ${items[it].values[vt].sleep}`;
                     if(items[it].values[vt].happinessbuy)valuemsg += ` > Happiness gained on buy >> ${items[it].values[vt].happinessbuy}`;
                     if(items[it].values[vt].cooldown)valuemsg += ` > Cooldown >> ${items[it].values[vt].cooldown}`;
+                    if(items[it].values[vt].storage)valuemsg += ` > Storage >> ${items[it].values[vt].storage}`;
+                    if(items[it].values[vt].rentCost)valuemsg += ` > Rent >> ${items[it].values[vt].rentCost}`;
                 }
                 msgsend += "```"+`${items[it].name} >> ${items[it].price}${config.moneyname}${valuemsg}\n`+"```";
             }
@@ -114,6 +118,9 @@ module.exports = {
                                     bed{
                                         name
                                     }
+                                    house{
+                                        name
+                                    }
                                   }
                                   inventory{
                                     groceries
@@ -147,8 +154,10 @@ module.exports = {
                             if(!fastfood) fastfood = 0;
                             if(happinessonbuy)newhappiness+happinessonbuy;
                             if(users.houseInventory[0].bed[0].name == optionFix)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy a bed you already own.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                            if(users.houseInventory[0].house[0].name == optionFix)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy a house you already own.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                             if(optionFix == "Groceries")amountup = groceries+amount;
                             else if (optionFix == "Fast_Food")amountup = fastfood+amount;
+                            else amount = 1;
                             axios({
                                 url:config.APIurl,
                                 method:'post',

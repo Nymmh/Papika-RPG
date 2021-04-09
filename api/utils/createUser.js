@@ -13,7 +13,7 @@ function createUser(auth,discordId,name,avatar){
                 newUser.save().then(()=>{
                     let newUsersInv = new UserInventories({discordId:discordId,maxSpace:5,usedSpace:0,backpack:false});
                     newUsersInv.save().then(()=>{
-                        let newHouseInv = new UserHouseInventory({discordId:discordId,bed:"60644135aa88ed348b1d5764",maxSpace:15,usedSpace:0,storageUpgrade:0});
+                        let newHouseInv = new UserHouseInventory({discordId:discordId,bed:"60644135aa88ed348b1d5764",maxSpace:15,usedSpace:0,storageUpgrade:0,security:0,house:"606fc005623119dad350cf68"});
                         newHouseInv.save().then(()=>{
                             console.log("new user created")
                         })

@@ -98,6 +98,9 @@ module.exports = {
     House:{
         async bed(parent,args, context, info){
             return ItemValues.find({parent:parent.bed});
+        },
+        async house(parent,args, context, info){
+            return ItemValues.find({parent:parent.house});
         }
     }
 }

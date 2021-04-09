@@ -1,4 +1,4 @@
-const {Users,UserInventories,Items,UserHouseInventory} = require('./models');
+const {Users,UserInventories,Items,UserHouseInventory,ItemValues} = require('./models');
 let config = require('../json/config.json');
 
 exports.userBuy = (auth,discordId,money,happiness,item,amount)=>{
@@ -27,6 +27,20 @@ function userBuy(auth,discordId,money,happiness,item,amount){
                     itemId = res._id;
                     UserHouseInventory.findOneAndUpdate({discordId:discordId},{bed:itemId},{new:true},(err,data)=>{
                         if(err)console.log(err);else console.log(data)
+                    });
+                });
+            }else if(item.match(/(House_Tier_)/)){
+                Items.findOne({name:item},(err,res)=>{
+                    itemId = res._id;
+                    ItemValues.findOne({parent:itemId},(err,res)=>{
+                        let storage = res.storage;
+                        UserHouseInventory.findOne({discordId:discordId},(err,res)=>{
+                            let storageUpgrades = res.storageUpgrade;
+                            if(storageUpgrades = 0)storage = storage;
+                            UserHouseInventory.findOneAndUpdate({discordId:discordId},{house:itemId,maxSpace:storage},{new:true},(err,data)=>{
+                                if(err)console.log(err);else console.log(data)
+                            });
+                        });
                     });
                 });
             }
