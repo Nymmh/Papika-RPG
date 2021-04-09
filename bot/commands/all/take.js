@@ -21,6 +21,7 @@ module.exports = {
             if(amount == 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not take 0 of an item.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             if(amount % 1 != 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can only take whole numbers of items.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             let optionFix = option.replace(/(_)/g,' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g,lt=>lt.toUpperCase()).replace(/( )/g,'_');
+            if(optionFix == "Fastfood")optionFix = "Fast_Food";
             axios({
                 url:config.APIurl,
                 method:'post',

@@ -77,6 +77,9 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
                   lastwork
                   engineeringDegree
                   businessDegree
+                  medicalDegree
+                  ROTCDegree
+                  culinaryDegree
                   jobinfo{
                     name
                     income
@@ -125,9 +128,15 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
                 nextbill = result.data.data.users[0].nextbill,
                 lastwork = result.data.data.users[0].lastwork,
                 engineeringDegree = false,
-                businessDegree = false;
+                businessDegree = false,
+                medicalDegree = false,
+                ROTCDegree = false,
+                culinaryDegree = false;
             engineeringDegree = result.data.data.users[0].engineeringDegree;
             businessDegree = result.data.data.users[0].businessDegree;
+            medicalDegree = result.data.data.users[0].medicalDegree;
+            ROTCDegree = result.data.data.users[0].ROTCDegree;
+            culinaryDegree = result.data.data[0].culinaryDegree;
             processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree);
         }
     });
@@ -249,10 +258,39 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
             requiredSchool = result.data.data.jobs[0].requiredSchool;
         if(newexp >= nextjobxp){
             if(requiredSchool == '')promotion = true;
-            else if(requiredSchool == 'Engineering'){
-                if(!engineeringDegree){
-                    promotion = false;
-                    Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You do not have the ${requiredSchool} degree to be promoted.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+            else{
+                reqschool = requiredSchool.split(",");
+                for(let rq in reqschool){
+                    if(reqschool[rq] == "Engineering"){
+                        if(!engineeringDegree){
+                            promotion = false;
+                            Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You do not have the ${requiredSchool} degree to be promoted.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                        }
+                    }
+                    if(reqschool[rq] == "Business"){
+                        if(!businessDegree){
+                            promotion = false;
+                            Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You do not have the ${requiredSchool} degree to be promoted.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                        }
+                    }
+                    if(reqschool[rq] == "Medical"){
+                        if(!medicalDegree){
+                            promotion = false;
+                            Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You do not have the ${requiredSchool} degree to be promoted.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                        }
+                    }
+                    if(reqschool[rq] == "ROTC"){
+                        if(!ROTCDegree){
+                            promotion = false;
+                            Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You do not have the ${requiredSchool} degree to be promoted.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                        }
+                    }
+                    if(reqschool[rq] == "Culinary"){
+                        if(!culinaryDegree){
+                            promotion = false;
+                            Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You do not have the ${requiredSchool} degree to be promoted.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                        }
+                    }
                 }
             }
         }

@@ -18,7 +18,7 @@ function userStash(auth,discordId,item,amount,reason){
                     if(res.groceries)housegroceries = res.groceries;
                     if(res.fastfood)housefastfood = res.fastfood;
                     housegroceries = (housegroceries+amount);
-                    housefastfood = (housegroceries+amount);
+                    housefastfood = (housefastfood+amount);
                     UserInventories.findOneAndUpdate({discordId:discordId},{usedSpace:usedspace},{new:true},(err,data)=>{
                         if(err)console.log(err);else console.log(data)
                     });
