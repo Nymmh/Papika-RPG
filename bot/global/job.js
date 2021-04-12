@@ -136,7 +136,7 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
             businessDegree = result.data.data.users[0].businessDegree;
             medicalDegree = result.data.data.users[0].medicalDegree;
             ROTCDegree = result.data.data.users[0].ROTCDegree;
-            culinaryDegree = result.data.data[0].culinaryDegree;
+            culinaryDegree = result.data.data.users[0].culinaryDegree;
             processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree);
         }
     });
