@@ -198,6 +198,7 @@ function jobChange(Ai, msg, value, sndmsg){
 
 function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree){
     let {handleBills} = require('./utils/handleBills');
+    let handleHospital = require('./utils/handleHospital');
     if((moment().unix() - Number(lastwork)) < cooldowns.work) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't work for another ${Math.abs(((moment().unix() - Number(lastwork))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     let newmoney = (Number(money)+Number(income));
     let randomsleep = utils.getRandomInt(1,20),
@@ -211,7 +212,8 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
         newnextbill = (nextbill - 1),
         firedRate = (Math.random() * (100 - 0 + 1) + 0).toFixed(3),
         fired = false,
-        promotion = false;
+        promotion = false,
+        hungerHospital = false;
     if(newSleep <= 0){
         //fell asleep at work
         firedchance = Math.abs((Number(firedchance)+newSleep));
@@ -229,6 +231,15 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
         newHappiness = (newHappiness-10);
         Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you have been fired from your job!`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     }
+    if(newHunger <= -5){
+        hospitalChance = (Math.random() * (100 - 0 + 1) + 0).toFixed(3);
+        hospitalHChance = Math.abs(hospitalChance+newHunger);
+        if((hospitalChance<hospitalHChance)){
+            hungerHospital = true;
+            newHappiness = (newHappiness-20);
+        }
+    }else if(newHunger<=5)Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are very hungry.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+    else if(newHunger <= 20)Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are starting to get hungry.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     axios({
         url:config.APIurl,
         method:'post',
@@ -329,6 +340,7 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
                 value = "";
                 jobChange(Ai, msg, value, sndmsg)
             }
+            if(hungerHospital)handleHospital(Ai, msg, newHunger);
             if(promotion){
                 workmsg = `you have been promoted to **${nextjobname}** and you gained ${income}${config.moneyname}'s`;
                 sndmsg = "dontsend";

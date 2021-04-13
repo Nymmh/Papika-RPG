@@ -37,6 +37,16 @@ function modifyUser(auth,discordId,reason,value){
                 }
             });
         }
+        if(reason == "hospitalbills"){
+            Users.find({discordId:discordId},(err,res)=>{
+                if(!err) if(res[0]){
+                    console.log("Modifying user");
+                    Users.findOneAndUpdate({discordId:discordId},{money:Number(value),hunger:0},{new:true},(err,data)=>{
+                        if(err)console.log(err);else console.log(data)
+                    });
+                }
+            });
+        }
         if(reason == "schoolquit"){
             Users.find({discordId:discordId},(err,res)=>{
                 if(!err) if(res[0]){
