@@ -19,7 +19,7 @@ module.exports = {
     if (sendMessages === false) return;
     if(!suffix) return 'wrong usage';
     let options = suffix.split(" ");
-    let groups = ['food','bed','house'];
+    let groups = ['food','bed','house','user'];
     if(options[0] == 'list'){
         if(!groups.includes(options[1]))return Ai.createMessage(msg.channel.id,`The options for ~buy list is `+"``"+`${groups}`+"``"+``).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         axios({
@@ -127,6 +127,7 @@ module.exports = {
                                     fastfood
                                     usedSpace
                                     maxSpace
+                                    backpack
                                 }
                                 }
                               }
@@ -157,6 +158,7 @@ module.exports = {
                             if(users.houseInventory[0].house[0].name == optionFix)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy a house you already own.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                             if(optionFix == "Groceries")amountup = groceries+amount;
                             else if (optionFix == "Fast_Food")amountup = fastfood+amount;
+                            else if(optionFix == "Backpack" && users.inventory[0].backpack)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy 2 Backpacks.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                             else amount = 1;
                             axios({
                                 url:config.APIurl,

@@ -198,7 +198,8 @@ function jobChange(Ai, msg, value, sndmsg){
 
 function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree){
     let {handleBills} = require('./utils/handleBills');
-    let handleHospital = require('./utils/handleHospital');
+    let {handleHospital} = require('./utils/handleHospital');
+    let {extendedMsg} = require('./utils/extendedMsg');
     if((moment().unix() - Number(lastwork)) < cooldowns.work) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't work for another ${Math.abs(((moment().unix() - Number(lastwork))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     let newmoney = (Number(money)+Number(income));
     let randomsleep = utils.getRandomInt(1,20),
@@ -347,6 +348,7 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
                 value = jobid;
                 jobPromotion(Ai, msg, value, sndmsg)
             }
+            extendedMsg(Ai,msg,newSleep,newHunger,newHappiness);
             return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, ${workmsg}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         });
     });

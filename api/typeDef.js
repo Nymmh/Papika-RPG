@@ -138,6 +138,7 @@ module.exports.typeDefs = gql`
         Food
         Bed
         House
+        User
     },
     enum ItemStore{
         civilian

@@ -19,6 +19,7 @@ module.exports = {
                         fastfood
                         usedSpace
                         maxSpace
+                        backpack
                     }
                     houseInventory{
                         house{
@@ -50,6 +51,7 @@ module.exports = {
             houseinvTemp = "";
         let housename = result.data.data.users[0].houseInventory[0].house[0].name;
         for(let iv in result.data.data.users[0].inventory){
+            if(result.data.data.users[0].inventory[iv].backpack)invmsgTemp += `Backpack\n`;
             if(result.data.data.users[0].inventory[iv].groceries)invmsgTemp += `Groceries >> ${result.data.data.users[0].inventory[iv].groceries}\n`;
             if(result.data.data.users[0].inventory[iv].fastfood)invmsgTemp += `Fast Food >> ${result.data.data.users[0].inventory[iv].fastfood}\n`;
         }

@@ -43,6 +43,10 @@ function userBuy(auth,discordId,money,happiness,item,amount){
                         });
                     });
                 });
+            }else if(item === "Backpack"){
+                UserInventories.findOneAndUpdate({discordId:discordId},{maxSpace:20,backpack:true},{new:true},(err,data)=>{
+                    if(err)console.log(err);else console.log(data)
+                });
             }
         });
     }

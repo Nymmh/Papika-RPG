@@ -190,6 +190,7 @@ module.exports = {
                     },
                 }
             }).then(result=>{
+                let {extendedMsg} = require('../../global/utils/extendedMsg')
                 let currentSchool = result.data.data.users[0].currentSchool;
                 if(currentSchool == undefined || currentSchool == "")return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you are currently not in school.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                 let lastschool = result.data.data.users[0].lastSchool
@@ -236,6 +237,7 @@ module.exports = {
                         },
                     }
                 }).then(()=>{
+                    extendedMsg(Ai,msg,sleep,hunger,happiness);
                     if(schoolDone){
                         axios({
                             url:config.APIurl,
