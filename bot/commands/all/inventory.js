@@ -63,7 +63,7 @@ module.exports = {
         for(let iv in result.data.data.users[0].inventory){
             if(result.data.data.users[0].inventory[iv].backpack)invmsgTemp += `Backpack\n`;
             if(result.data.data.users[0].inventory[iv].vape[0].name)invmsgTemp += `Vape Mod >> ${result.data.data.users[0].inventory[iv].vape[0].name}\n`;
-            if(result.data.data.users[0].inventory[iv].vapejuice[0].name)invmsgTemp += `Vape Juice >> ${result.data.data.users[0].inventory[iv].vapejuice[0].name} > ${result.data.data.users[0].inventory[iv].vapejuiceStrength[0].name.replace('nic','')}mg > ${result.data.data.users[0].inventory[iv].vapejuiceRemaining}% Remaining\n`;
+            if(result.data.data.users[0].inventory[iv].vapejuice[0].name)invmsgTemp += `Vape Juice >> ${result.data.data.users[0].inventory[iv].vapejuice[0].name} > ${result.data.data.users[0].inventory[iv].vapejuiceStrength[0].name.replace('nic','')}mg > ${result.data.data.users[0].inventory[iv].vapejuiceRemaining}ml Remaining\n`;
             if(result.data.data.users[0].inventory[iv].groceries)invmsgTemp += `Groceries >> ${result.data.data.users[0].inventory[iv].groceries}\n`;
             if(result.data.data.users[0].inventory[iv].fastfood)invmsgTemp += `Fast Food >> ${result.data.data.users[0].inventory[iv].fastfood}\n`;
         }

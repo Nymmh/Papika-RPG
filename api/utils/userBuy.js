@@ -61,8 +61,9 @@ function userBuy(auth,discordId,money,happiness,item,amount){
                     itemId = res._id;
                     let strengthSearch = `nic${amount}`;
                     Items.findOne({name:strengthSearch},(err,res)=>{
-                        strengthId = res._id
-                        UserInventories.findOneAndUpdate({discordId:discordId},{money:money,usedSpace:usedspace,vapejuice:itemId,vapejuiceRemaining:100,vapejuiceStrength:strengthId},{new:true},(err,data)=>{
+                        strengthId = res._id;
+                        let size = item.match(/(\d)/g);
+                        UserInventories.findOneAndUpdate({discordId:discordId},{money:money,usedSpace:usedspace,vapejuice:itemId,vapejuiceRemaining:Number(size.join('')),vapejuiceStrength:strengthId},{new:true},(err,data)=>{
                             if(err)console.log(err);else console.log(data)
                         });
                     });

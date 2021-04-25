@@ -1,4 +1,4 @@
-const {Users,Schools} = require('./models');
+const {Users,Schools,UserInventories, ItemValues, Items} = require('./models');
 let config = require('../json/config.json'),
     moment = require('moment');
 
@@ -101,6 +101,39 @@ function modifyUser(auth,discordId,reason,value){
                         });
                     }
                 }
+            });
+        }
+        if(reason == "novapejuiceleft"){
+            UserInventories.findOneAndUpdate({discordId:discordId},{vapejuiceRemaining:0,vapejuiceStrength:"",vapejuice:""},{new:true},(err,data)=>{
+                if(err)console.log(err);else console.log(data)
+            });
+        }
+        if(reason == "vapehit"){
+            var empty = false;
+            UserInventories.findOne({discordId:discordId},(err,res)=>{
+                let vapejuice = res.vapejuice,
+                    remaining = res.vapejuiceRemaining,
+                    vapejuiceStrength = res.vapejuiceStrength;
+                ItemValues.findOne({parent:vapejuiceStrength},(err,res)=>{
+                    let vapeHappiness = res.usehappiness;
+                    remaining = (remaining-2);
+                    if(remaining == 0)empty = true;
+                    Users.findOne({discordId:discordId},(err,res)=>{
+                        let happiness = (res.happiness+vapeHappiness);
+                        Users.findOneAndUpdate({discordId:discordId},{happiness:happiness},{new:true},(err,data)=>{
+                            if(err)console.log(err);else console.log(data)
+                            if(empty){
+                                UserInventories.findOneAndUpdate({discordId:discordId},{vapejuiceRemaining:0,vapejuiceStrength:"",vapejuice:""},{new:true},(err,data)=>{
+                                    if(err)console.log(err);else console.log(data)
+                                });
+                            }else{
+                                UserInventories.findOneAndUpdate({discordId:discordId},{vapejuiceRemaining:remaining},{new:true},(err,data)=>{
+                                    if(err)console.log(err);else console.log(data)
+                                });
+                            }
+                        });
+                    });
+                });
             });
         }
     }

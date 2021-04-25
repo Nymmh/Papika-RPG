@@ -75,8 +75,12 @@ module.exports = {
             let optionFix = option.replace(/(_)/g,' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g,lt=>lt.toUpperCase()).replace(/( )/g,'_');
             var amount = 1;
             if(optionFix.match(/(Yubi_Juice_)/)){
-                amount = 1;
                 var strength = options[1];
+                let strengthType = ['0','1.5','3','6','9','12'];
+                if(!strength)return Ai.createMessage(msg.channel.id,`The options for the strength is `+"``"+`${strengthType}`+"``"+``).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                amount = 1;
+                console.log(strength)
+                if(!strengthType.includes(strength))return Ai.createMessage(msg.channel.id,`The options for the strength is `+"``"+`${strengthType}`+"``"+``).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             }else{
                 if(options.length == 3)option = options[0].concat(' '+options[1]);
                 if(options[2])amount = Number(options[2]);
