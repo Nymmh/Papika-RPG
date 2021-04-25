@@ -19,7 +19,7 @@ module.exports = {
     if (sendMessages === false) return;
     if(!suffix) return 'wrong usage';
     let options = suffix.split(" ");
-    let groups = ['food','bed','house','user'];
+    let groups = ['food','bed','house','user','vape'];
     if(options[0] == 'list'){
         if(!groups.includes(options[1]))return Ai.createMessage(msg.channel.id,`The options for ~buy list is `+"``"+`${groups}`+"``"+``).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         axios({
@@ -72,14 +72,19 @@ module.exports = {
     }else if(!groups.includes(options[0])){
         if(options.length>=0){
             let option = options[0];
-            if(options.length == 3)option = options[0].concat(' '+options[1]);
-            let amount = 1;
-            if(options[2])amount = Number(options[2]);
-            else if(options[1])amount = Number(options[1]);
-            if(amount == 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy 0 of an item.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
-            if(amount % 1 != 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can only buy whole numbers of items.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             let optionFix = option.replace(/(_)/g,' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g,lt=>lt.toUpperCase()).replace(/( )/g,'_');
-            if(optionFix == "Fastfood")optionFix = "Fast_Food";
+            var amount = 1;
+            if(optionFix.match(/(Yubi_Juice_)/)){
+                amount = 1;
+                var strength = options[1];
+            }else{
+                if(options.length == 3)option = options[0].concat(' '+options[1]);
+                if(options[2])amount = Number(options[2]);
+                else if(options[1])amount = Number(options[1]);
+                if(amount == 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy 0 of an item.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                if(optionFix == "Fastfood")optionFix = "Fast_Food";
+            }
+            if(amount % 1 != 0)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can only buy whole numbers of items.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
             axios({
                 url:config.APIurl,
                 method:'post',
@@ -103,8 +108,9 @@ module.exports = {
                 }
             }).then(result=>{
                 if(!result.data.data.items[0])return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>,`+" I could not find an item called ``"+optionFix+"``.").catch(err => {handleError(Ai, __filename, msg.channel, err)});
-                let price = result.data.data.items[0].price,
-                    happinessonbuy = result.data.data.items[0].values[0].happinessbuy;
+                let happinessonbuy = 0;
+                let price = result.data.data.items[0].price;
+                if(result.data.data.items[0].values[0])happinessonbuy = result.data.data.items[0].values[0].happinessbuy;
                     axios({
                         url:config.APIurl,
                         method:'post',
@@ -128,6 +134,12 @@ module.exports = {
                                     usedSpace
                                     maxSpace
                                     backpack
+                                    vape{
+                                        name
+                                    }
+                                    vapejuice{
+                                        name
+                                    }
                                 }
                                 }
                               }
@@ -159,7 +171,10 @@ module.exports = {
                             if(optionFix == "Groceries")amountup = groceries+amount;
                             else if (optionFix == "Fast_Food")amountup = fastfood+amount;
                             else if(optionFix == "Backpack" && users.inventory[0].backpack)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You can not buy 2 Backpacks.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                            else if(optionFix == "Peko_Vape_mode" && users.inventory[0].vape[0].name)return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You already have a vape mod.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
+                            else if(optionFix.match(/(Yubi_Juice_)/) && users.inventory[0].vapejuice[0])return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, You already have vape juice.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
                             else amount = 1;
+                            if(optionFix.match(/(Yubi_Juice_)/))amountup = Number(strength);
                             axios({
                                 url:config.APIurl,
                                 method:'post',

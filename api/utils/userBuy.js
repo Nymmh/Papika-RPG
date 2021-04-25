@@ -47,6 +47,26 @@ function userBuy(auth,discordId,money,happiness,item,amount){
                 UserInventories.findOneAndUpdate({discordId:discordId},{maxSpace:20,backpack:true},{new:true},(err,data)=>{
                     if(err)console.log(err);else console.log(data)
                 });
+            }else if(item === "Peko_Vape_Mod"){
+                usedspace = (res.usedSpace+1);
+                Items.findOne({name:item},(err,res)=>{
+                    itemId = res._id;
+                    UserInventories.findOneAndUpdate({discordId:discordId},{usedSpace:usedspace,vape:itemId},{new:true},(err,data)=>{
+                        if(err)console.log(err);else console.log(data)
+                    });
+                });
+            }else if(item.match(/(Yubi_Juice_)/)){
+                usedspace = (res.usedSpace+1);
+                Items.findOne({name:item},(err,res)=>{
+                    itemId = res._id;
+                    let strengthSearch = `nic${amount}`;
+                    Items.findOne({name:strengthSearch},(err,res)=>{
+                        strengthId = res._id
+                        UserInventories.findOneAndUpdate({discordId:discordId},{money:money,usedSpace:usedspace,vapejuice:itemId,vapejuiceRemaining:100,vapejuiceStrength:strengthId},{new:true},(err,data)=>{
+                            if(err)console.log(err);else console.log(data)
+                        });
+                    });
+                });
             }
         });
     }

@@ -102,5 +102,16 @@ module.exports = {
         async house(parent,args, context, info){
             return ItemValues.find({parent:parent.house});
         }
+    },
+    Inventory:{
+        async vape(parent,args, context, info){
+            return ItemValues.find({parent:parent.vape});
+        },
+        async vapejuice(parent,args, context, info){
+            return ItemValues.find({parent:parent.vapejuice});
+        },
+        async vapejuiceStrength(parent,args, context, info){
+            return ItemValues.find({parent:parent.vapejuiceStrength});
+        }
     }
 }

@@ -31,6 +31,10 @@ module.exports.UserInventories = mongoose.model('userinventories',{
     backpack:Boolean,
     groceries:Number,
     fastfood:Number,
+    vape:String,
+    vapejuice:String,
+    vapejuiceRemaining:Number,
+    vapejuiceStrength:String,
 });
 module.exports.UserHouseInventory = mongoose.model('houseinventory',{
     discordId:String,

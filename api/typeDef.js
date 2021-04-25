@@ -58,6 +58,10 @@ module.exports.typeDefs = gql`
         backpack:Boolean,
         groceries:Int,
         fastfood:Int,
+        vape:[ItemValues],
+        vapejuice:[ItemValues],
+        vapejuiceStrength:[ItemValues],
+        vapejuiceRemaining:Int,
     }
     type House{
         discordId:String,
@@ -78,7 +82,7 @@ module.exports.typeDefs = gql`
     type Items{
         _id:String!,
         name:String!,
-        price:Int!,
+        price:Int,
         group:ItemGroup!
         values:[ItemValues!]
         store:[ItemStore!]
@@ -139,6 +143,7 @@ module.exports.typeDefs = gql`
         Bed
         House
         User
+        Vape
     },
     enum ItemStore{
         civilian
