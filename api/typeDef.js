@@ -9,6 +9,7 @@ module.exports.typeDefs = gql`
         environments(type:EnvironmentType):[Environment!]
         schools(name:String):[School!]
         gangs(name:String,id:String):[Gangs!]
+        addictions(name:String):[Addicitons!]
     }
     type Mutation {
         createUser(auth:String,discordId:String,name:String,avatar:String):[Profile]
@@ -50,6 +51,8 @@ module.exports.typeDefs = gql`
         gang:String,
         ganginfo:[Gangs],
         gangInvites:String,
+        nicotineAddiction:Boolean,
+        nicotineWithdrawldays:Int,
     }
     type Inventory{
         discordId:String,
@@ -136,6 +139,11 @@ module.exports.typeDefs = gql`
         leader:String!,
         invites:String,
         color:String,
+    }
+    type Addicitons{
+        name:String!,
+        chance:String,
+        withdrawlhappiness:Int,
     }
 
     enum ItemGroup{

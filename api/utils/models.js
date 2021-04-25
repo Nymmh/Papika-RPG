@@ -23,6 +23,8 @@ module.exports.Users = mongoose.model("users",{
     lastSchool:String,
     gang:String,
     gangInvites:String,
+    nicotineAddiction:Boolean,
+    nicotineWithdrawldays:Number,
 });
 module.exports.UserInventories = mongoose.model('userinventories',{
     discordId:String,
@@ -105,4 +107,9 @@ module.exports.Gangs = mongoose.model("gangs",{
     leader:String,
     invites:String,
     color:String
+});
+module.exports.Addictions = mongoose.model("addictions",{
+    name:String,
+    chance:String,
+    withdrawlhappiness:Number
 });

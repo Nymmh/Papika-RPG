@@ -1,4 +1,4 @@
-const {Users,Schools,UserInventories, ItemValues, Items} = require('./models');
+const {Users,Schools,UserInventories, ItemValues, Items, Addictions} = require('./models');
 let config = require('../json/config.json'),
     moment = require('moment');
 
@@ -110,30 +110,60 @@ function modifyUser(auth,discordId,reason,value){
         }
         if(reason == "vapehit"){
             var empty = false;
+            var addicted = false;
             UserInventories.findOne({discordId:discordId},(err,res)=>{
                 let vapejuice = res.vapejuice,
                     remaining = res.vapejuiceRemaining,
                     vapejuiceStrength = res.vapejuiceStrength;
                 ItemValues.findOne({parent:vapejuiceStrength},(err,res)=>{
-                    let vapeHappiness = res.usehappiness;
+                    let vapeHappiness = res.usehappiness,
+                        stname = res.name;
+                    stname.replace('nic','');
                     remaining = (remaining-2);
                     if(remaining == 0)empty = true;
                     Users.findOne({discordId:discordId},(err,res)=>{
                         let happiness = (res.happiness+vapeHappiness);
-                        Users.findOneAndUpdate({discordId:discordId},{happiness:happiness},{new:true},(err,data)=>{
+                        Users.findOneAndUpdate({discordId:discordId},{happiness:happiness,nicotineWithdrawldays:0},{new:true},(err,data)=>{
                             if(err)console.log(err);else console.log(data)
-                            if(empty){
-                                UserInventories.findOneAndUpdate({discordId:discordId},{vapejuiceRemaining:0,vapejuiceStrength:"",vapejuice:""},{new:true},(err,data)=>{
-                                    if(err)console.log(err);else console.log(data)
-                                });
-                            }else{
-                                UserInventories.findOneAndUpdate({discordId:discordId},{vapejuiceRemaining:remaining},{new:true},(err,data)=>{
-                                    if(err)console.log(err);else console.log(data)
-                                });
-                            }
+                            if(stname != "0")var addictedRate = (Math.random() * (100 - 0 + 1) + 0).toFixed(3);
+                            Addictions.findOne({name:"nicotine"},(err,res)=>{
+                                if(Number(addictedRate)>Number(res.chance))addicted = true;
+                                if(stname == '0')addicted = false;
+                                if(empty){
+                                    UserInventories.findOneAndUpdate({discordId:discordId},{vapejuiceRemaining:0,vapejuiceStrength:"",vapejuice:""},{new:true},(err,data)=>{
+                                        if(err)console.log(err);else console.log(data)
+                                    });
+                                }else{
+                                    UserInventories.findOneAndUpdate({discordId:discordId},{vapejuiceRemaining:remaining},{new:true},(err,data)=>{
+                                        if(err)console.log(err);else console.log(data)
+                                    });
+                                }
+                                if(addicted){
+                                    Users.findOneAndUpdate({discordId:discordId},{nicotineAddiction:true},{new:true},(err,res)=>{
+                                        if(err)console.log(err);else console.log(data)
+                                    });
+                                }
+                            });
                         });
                     });
                 });
+            });
+        }
+        if(reason == "nicotinewithdrawal"){
+            Users.findOne({discordId:discordId},(err,res)=>{
+                console.log(res.nicotineWithdrawldays)
+                let nicotineWithdrawldays = res.nicotineWithdrawldays;
+                if(nicotineWithdrawldays == undefined) nicotineWithdrawldays = 0;
+                nicotineWithdrawldays = (nicotineWithdrawldays+1);
+                if(nicotineWithdrawldays == 1){
+                    Users.findOneAndUpdate({discordId:discordId},{nicotineWithdrawldays:nicotineWithdrawldays},{new:true},(err,data)=>{
+                        if(err)console.log(err);else console.log(data)
+                    });
+                }else{
+                    Users.findOneAndUpdate({discordId:discordId},{nicotineWithdrawldays:nicotineWithdrawldays,happiness:value},{new:true},(err,data)=>{
+                        if(err)console.log(err);else console.log(data)
+                    });
+                }
             });
         }
     }

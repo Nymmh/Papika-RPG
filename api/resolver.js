@@ -1,4 +1,4 @@
-const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments,Schools,Gangs, UserHouseInventory} = require('./utils/models');
+const {Users,Cooldowns,Items,Jobs,ItemValues,UserInventories,Environments,Schools,Gangs, UserHouseInventory, Addictions} = require('./utils/models');
 const {createUser} = require('./utils/createUser'),
       {modifyUser} = require('./utils/modifyUser'),
       {userWork} = require('./utils/userwork'),
@@ -57,6 +57,12 @@ module.exports = {
                 if(args.name) return Gangs.find({name:args.name});
                 else if(args.id) return Gangs.find({_id:args.id});
                 else return Gangs.find();
+            }
+        },
+        addictions(parent, args, context, info){
+            if(args){
+                if(args.name) return Addictions.find({name:args.name});
+                else return Addictions.find();
             }
         }
     },

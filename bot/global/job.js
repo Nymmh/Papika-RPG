@@ -90,6 +90,8 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
                     group
                     rank
                   }
+                  nicotineAddiction
+                  nicotineWithdrawldays
                 }
               }`,
             variables:{
@@ -131,13 +133,17 @@ function jobCheck(Ai, msg, value, sndmsg, reason, jobname){
                 businessDegree = false,
                 medicalDegree = false,
                 ROTCDegree = false,
-                culinaryDegree = false;
+                culinaryDegree = false,
+                nicotineAddiction = false,
+                nicotineWithdrawldays = 0;
             engineeringDegree = result.data.data.users[0].engineeringDegree;
             businessDegree = result.data.data.users[0].businessDegree;
             medicalDegree = result.data.data.users[0].medicalDegree;
             ROTCDegree = result.data.data.users[0].ROTCDegree;
             culinaryDegree = result.data.data.users[0].culinaryDegree;
-            processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree);
+            nicotineAddiction = result.data.data.users[0].nicotineAddiction;
+            nicotineWithdrawldays = result.data.data.users[0].nicotineWithdrawldays
+            processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree, nicotineAddiction, nicotineWithdrawldays);
         }
     });
 }
@@ -196,10 +202,11 @@ function jobChange(Ai, msg, value, sndmsg){
      });
 }
 
-function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree){
+function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, sleep, income, legal, minexp, maxexp, firedchance, jobexp, nextbill, lastwork, jobrank, jobgroup, engineeringDegree, businessDegree, nicotineAddiction, nicotineWithdrawldays){
     let {handleBills} = require('./utils/handleBills');
     let {handleHospital} = require('./utils/handleHospital');
     let {extendedMsg} = require('./utils/extendedMsg');
+    let {nicotineWithdrawl} = require('./utils/handleWithdrawl');
     if((moment().unix() - Number(lastwork)) < cooldowns.work) return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, you can't work for another ${Math.abs(((moment().unix() - Number(lastwork))-cooldowns.work))} seconds.`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
     let newmoney = (Number(money)+Number(income));
     let randomsleep = utils.getRandomInt(1,20),
@@ -336,7 +343,7 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
             workmsg = `you worked at you job and gained ${income}${config.moneyname}'s`;
             if(newnextbill == 0)handleBills(Ai,msg,newmoney)
             if(fired){
-                workmsg = `you worked you last shift and gained ${income}${config.moneyname}'s`;
+                workmsg = `you worked your last shift and gained ${income}${config.moneyname}'s`;
                 sndmsg = "dontsend";
                 value = "";
                 jobChange(Ai, msg, value, sndmsg)
@@ -349,6 +356,7 @@ function processWork(Ai, msg, value, sndmsg, reason, happiness, money, hunger, s
                 jobPromotion(Ai, msg, value, sndmsg)
             }
             extendedMsg(Ai,msg,newSleep,newHunger,newHappiness);
+            if(nicotineAddiction)nicotineWithdrawl(Ai,msg,newHappiness,nicotineWithdrawldays)
             return Ai.createMessage(msg.channel.id,`<@${msg.author.id}>, ${workmsg}`).catch(err => {handleError(Ai, __filename, msg.channel, err)});
         });
     });
