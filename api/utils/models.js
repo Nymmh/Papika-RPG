@@ -56,6 +56,7 @@ module.exports.Cooldowns = mongoose.model("cooldowns",{
 module.exports.Items = mongoose.model("items",{
     name:String,
     price:Number,
+    cansell:Boolean,
     group:String,
     store:String
 });

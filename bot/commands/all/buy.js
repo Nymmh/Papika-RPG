@@ -184,8 +184,8 @@ module.exports = {
                                 method:'post',
                                 data:{
                                     query:`
-                                    mutation($auth:String,$discordId:String,$money:Int,$happiness:Int,$item:String,$amount:Int){
-                                        UserBuy(auth:$auth,discordId:$discordId,money:$money,happiness:$happiness,item:$item,amount:$amount){
+                                    mutation($auth:String,$discordId:String,$money:Int,$happiness:Int,$item:String,$amount:Int,$reason:String){
+                                        UserBuy(auth:$auth,discordId:$discordId,money:$money,happiness:$happiness,item:$item,amount:$amount,reason:$reason){
                                           discordId
                                         }
                                       }
@@ -196,7 +196,8 @@ module.exports = {
                                         money:newmoney,
                                         happiness:newhappiness,
                                         item:optionFix,
-                                        amount:amountup
+                                        amount:amountup,
+                                        reason:"buy"
                                     },
                                     headers:{
                                         'Content-Type':'application/json'

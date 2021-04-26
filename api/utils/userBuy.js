@@ -1,13 +1,14 @@
 const {Users,UserInventories,Items,UserHouseInventory,ItemValues} = require('./models');
 let config = require('../json/config.json');
 
-exports.userBuy = (auth,discordId,money,happiness,item,amount)=>{
-    userBuy(auth,discordId,money,happiness,item,amount);
+exports.userBuy = (auth,discordId,money,happiness,item,amount,reason)=>{
+    userBuy(auth,discordId,money,happiness,item,amount,reason);
 }
-function userBuy(auth,discordId,money,happiness,item,amount){
+function userBuy(auth,discordId,money,happiness,item,amount,reason){
     if(auth === config.APIAuth){
         UserInventories.findOne({discordId:discordId},(err,res)=>{
-            let usedspace = (res.usedSpace+amount);
+            if(reason == "buy")usedspace = (res.usedSpace+amount);
+            else if(reason == "sell")usedspace = (res.usedSpace-amount);
             UserInventories.findOneAndUpdate({discordId:discordId},{usedSpace:usedspace},{new:true},(err,data)=>{
                 if(err)console.log(err);else console.log(data)
             });

@@ -16,7 +16,7 @@ module.exports.typeDefs = gql`
         modifyUser(auth:String,discordId:String,reason:String,value:String):[Profile]
         UserWork(auth:String,discordId:String,money:Int,happiness:Int,hunger:Int,sleep:Int,jobexp:Int,nextbill:Int,lastwork:String):[Profile]
         UserSleep(auth:String,discordId:String,sleep:Int,happiness:Int,hunger:Int,reason:String):[Profile]
-        UserBuy(auth:String,discordId:String,money:Int,happiness:Int,item:String,amount:Int):[Profile]
+        UserBuy(auth:String,discordId:String,money:Int,happiness:Int,item:String,amount:Int,reason:String):[Profile]
         UserEat(auth:String,discordId:String,hunger:Int,happiness:Int,sleep:Int,item:String,itemsleft:Int):[Profile]
         UserSchool(auth:String,discordId:String,hunger:Int,happiness:Int,sleep:Int,nextbill:Int,schoolDays:Int):[Profile]
         createGang(auth:String,discordId:String,name:String,reason:String):[Gangs]
@@ -86,9 +86,10 @@ module.exports.typeDefs = gql`
         _id:String!,
         name:String!,
         price:Int,
-        group:ItemGroup!
-        values:[ItemValues!]
-        store:[ItemStore!]
+        group:ItemGroup!,
+        cansell:Boolean,
+        values:[ItemValues!],
+        store:[ItemStore!],
     }
     type ItemValues{
         name:String!,
